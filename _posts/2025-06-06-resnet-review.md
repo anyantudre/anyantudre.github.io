@@ -140,5 +140,4 @@ _Skip Connexion_
 ization and intermediate normalization layers, which enable networks with tens of layers to start converging for stochastic gradient descent (SGD) with backpropagation 
 
 Papers to explore:
-- [ S. Ioffe and C. Szegedy. Batch normalization: Accelerating deep network training by reducing internal covariate shift. In ICML, 2015.]()
-- another one i forgot
+- [S. Ioffe and C. Szegedy. Batch normalization: Accelerating deep network training by reducing internal covariate shift. In ICML, 2015.](https://arxiv.org/abs/1502.03167)
