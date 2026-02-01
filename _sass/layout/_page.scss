@@ -392,6 +392,46 @@
     color: inherit;
     text-decoration: none;
   }
+
+  .grid__wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .grid__item {
+    width: 100%;
+    min-width: 0;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .archive__item-title {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    word-wrap: normal;
+    overflow-wrap: normal;
+  }
+
+  .archive__item-title a {
+    word-break: normal;
+  }
+
+  .archive__item-excerpt {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    word-wrap: normal;
+    overflow-wrap: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 }
 
 .page__related-title {

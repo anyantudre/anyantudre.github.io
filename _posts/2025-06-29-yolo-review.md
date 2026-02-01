@@ -8,6 +8,8 @@ image:
   path: /images/blog/img_yolo/the_model.png
   alt: YOLO model.
 math: true
+translation_fr: /blog/posts/yolo-review-fr/
+lang: en
 ---
 
 

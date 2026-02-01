@@ -11,7 +11,45 @@ layout: single
 
   <article class="blog-post">
 
-    {% comment %} --- Hero / featured image at top of post --- {% endcomment %}
+    {% comment %} --- Meta block: lang switcher + date, read time, visitors, categories (below title, before hero image) --- {% endcomment %}
+    <div class="blog-post__meta-block">
+      {% if page.translation_fr or page.translation_en %}
+      <div class="blog-post__lang-switcher">
+        {% if page.translation_fr %}
+          <a href="{{ page.translation_fr | relative_url }}" class="blog-post__lang-link" title="Lire en français">🇫🇷 Lire en français</a>
+        {% endif %}
+        {% if page.translation_en %}
+          <a href="{{ page.translation_en | relative_url }}" class="blog-post__lang-link" title="Read in English">🇬🇧 Read in English</a>
+        {% endif %}
+      </div>
+      {% endif %}
+      <div class="blog-post__meta-row">
+        <div class="blog-post__meta">
+          <time datetime="{{ page.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+            {{ page.date | date: "%B %d, %Y" }}
+          </time>
+          {% if site.words_per_minute %}
+            {% assign words = content | number_of_words %}
+            {% assign reading_time = words | divided_by: site.words_per_minute %}
+            {% if reading_time < 1 %}{% assign reading_time = 1 %}{% endif %}
+            <span class="blog-post__reading-time">· {{ reading_time }} min read</span>
+          {% endif %}
+        </div>
+        <div class="blog-post__visitor-badge">
+          <img src="https://hitscounter.dev/api/hit?url={{ page.url | absolute_url | url_encode }}&label=Visitors&icon=eye-fill&color=%23dc3545&message=&style=flat-square&tz=UTC" alt="Visitors" class="blog-post__visitor-img" />
+        </div>
+      </div>
+      {% if page.categories.size > 0 %}
+      <div class="blog-post__categories">
+        <span class="blog-post__categories-label">Categories:</span>
+        {% for cat in page.categories %}
+          <a href="{{ '/blog/categories/' | relative_url }}#{{ cat | slugify }}" class="blog-post__category">{{ cat }}</a>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+
+    {% comment %} --- Hero / featured image (after meta block) --- {% endcomment %}
     {% if page.image and page.image.path %}
     <div class="blog-post__hero">
       <img
@@ -26,52 +64,27 @@ layout: single
     </div>
     {% endif %}
 
-    {% comment %} --- Post meta info --- {% endcomment %}
-    <div class="blog-post__meta">
-      <time datetime="{{ page.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
-        {{ page.date | date: "%B %d, %Y" }}
-      </time>
-
-      {% comment %} --- Reading time --- {% endcomment %}
-      {% if site.words_per_minute %}
-        {% assign words = content | number_of_words %}
-        {% assign reading_time = words | divided_by: site.words_per_minute %}
-        {% if reading_time < 1 %}{% assign reading_time = 1 %}{% endif %}
-        <span class="blog-post__reading-time">· {{ reading_time }} min read</span>
-      {% endif %}
-    </div>
-
-    {% comment %} --- Categories --- {% endcomment %}
-    {% if page.categories.size > 0 %}
-    <div class="blog-post__categories">
-      <span class="blog-post__categories-label">Categories:</span>
-      {% for cat in page.categories %}
-        <a href="{{ '/blog/categories/' | relative_url }}#{{ cat | slugify }}" class="blog-post__category">{{ cat }}</a>
-      {% endfor %}
-    </div>
-    {% endif %}
-
     {% comment %} --- Post content --- {% endcomment %}
     <div class="blog-post__content">
       {{ content }}
     </div>
 
     {% comment %} --- Tags --- {% endcomment %}
-    {% if page.tags.size > 0 %}
+    <!-- {% if page.tags.size > 0 %}
     <div class="blog-post__tags">
       <span class="blog-post__tags-label">Tags:</span>
       {% for tag in page.tags %}
         <a href="{{ '/blog/tags/' | relative_url }}#{{ tag | slugify }}" class="blog-post__tag">{{ tag }}</a>
       {% endfor %}
     </div>
-    {% endif %}
+    {% endif %} -->
 
     {% comment %} --- Share buttons --- {% endcomment %}
-    <div class="blog-post__share">
+    <!-- <div class="blog-post__share">
       <span>Share:</span>
       <a href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener">Twitter / X</a>
       <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ page.url | absolute_url | url_encode }}&title={{ page.title | url_encode }}" target="_blank" rel="noopener">LinkedIn</a>
-    </div>
+    </div> -->
 
     {% comment %} --- Post navigation --- {% endcomment %}
     <nav class="blog-post__nav">

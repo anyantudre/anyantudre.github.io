@@ -8,6 +8,8 @@ image:
   path: /images/blog/img_resnet/ResNet_Paper_3.png
   alt: Skip Connexion, a ResNet building block.
 math: true
+translation_fr: /blog/posts/resnet-review-fr/
+lang: en
 ---
 
 

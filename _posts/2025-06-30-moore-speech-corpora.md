@@ -7,6 +7,8 @@ description: From data collection to Hugging Face ready dataset.
 image:
   path: /images/blog/img_moore_speech_corpora/crawling_process.png
   alt: Crawling Process
+translation_fr: /blog/posts/moore-speech-corpora-fr/
+lang: en
 ---
 
 Working with under-resourced languages like Mooré is both exciting and challenging. In this tutorial, I'll walk you through the full pipeline I used to collect and prepare Mooré speech data scraped from the Bible-ready to be pushed to the Hugging Face Hub.

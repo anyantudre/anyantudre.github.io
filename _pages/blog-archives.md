@@ -7,7 +7,8 @@ author_profile: true
 
 <div class="blog-wrapper blog-archives">
 
-{% assign postsByYear = site.posts | group_by_exp: "post", "post.date | date: '%Y'" %}
+{% assign posts_en = site.posts | where_exp: "post", "post.lang != 'fr'" %}
+{% assign postsByYear = posts_en | group_by_exp: "post", "post.date | date: '%Y'" %}
 
 {% for year in postsByYear %}
   <h3 id="{{ year.name }}">{{ year.name }}</h3>

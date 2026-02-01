@@ -8,7 +8,9 @@ layout: single
 
 <div class="blog-wrapper">
 
-  {% assign posts_to_show = paginator.posts | default: site.posts %}
+  {% comment %} Only list English posts; French versions are reached via language switcher on the article. {% endcomment %}
+  {% assign posts_raw = paginator.posts | default: site.posts %}
+  {% assign posts_to_show = posts_raw | where_exp: "item", "item.lang != 'fr'" %}
   {% for post in posts_to_show %}
   <article class="blog-card">
 
