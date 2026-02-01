@@ -21,12 +21,15 @@ repository               : "anyantudre/anyantudre.github.io"
 # To enable: 1) Enable Discussions on your repo, 2) Install Giscus app, 3) Get IDs from giscus.app
 giscus:
   repo: "anyantudre/anyantudre.github.io"
-  repo_id: "R_REPLACE_WITH_YOUR_REAL_REPO_ID"
-  category: "Comments"
-  category_id: "DIC_REPLACE_WITH_YOUR_REAL_CATEGORY_ID"
+  repo_id: "R_kgDORF93gA"
+  category: "Announcements"
+  category_id: "DIC_kwDORF93gM4C1t7-"
   mapping: "pathname"
   reactions_enabled: "1"
-  theme: "dark_dimmed"
+  emit_metadata: "0"
+  input_position: "bottom"
+  theme: "dark"
+  lang: "en"
 
 # Site Author - The following control what appear as part of the author content on the side bar.
 #               If a field is blank the icon and link will not appear, otherwise it will be shown.
