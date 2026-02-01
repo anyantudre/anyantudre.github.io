@@ -123,6 +123,7 @@ layout: single_no_compress
 {% comment %} --- TOC-building JavaScript --- {% endcomment %}
 <script>
 (function () {
+  function buildToc() {
   var tocNav = document.getElementById('blog-toc');
   var tocPanel = document.querySelector('.blog-toc-fixed');
   if (!tocNav || !tocPanel) return;
@@ -134,6 +135,10 @@ layout: single_no_compress
   }
 
   var headings = content.querySelectorAll('h2, h3');
+  if (headings.length === 0) {
+    var container = document.querySelector('.blog-post') || document.querySelector('article');
+    if (container) headings = container.querySelectorAll('h2, h3');
+  }
   if (headings.length === 0) {
     tocPanel.style.display = 'none';
     return;
@@ -222,6 +227,12 @@ layout: single_no_compress
 
   window.addEventListener('scroll', updateActive, { passive: true });
   updateActive();
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', buildToc);
+  } else {
+    buildToc();
+  }
 })();
 </script>
 
