@@ -1,0 +1,20 @@
+{% if site.giscus.repo %}
+<div class="blog-post__comments">
+  <script
+    src="https://giscus.app/client.js"
+    data-repo="{{ site.giscus.repo }}"
+    data-repo-id="{{ site.giscus.repo_id }}"
+    data-category="{{ site.giscus.category }}"
+    data-category-id="{{ site.giscus.category_id }}"
+    data-mapping="{{ site.giscus.mapping | default: 'pathname' }}"
+    data-strict="0"
+    data-reactions-enabled="{{ site.giscus.reactions_enabled | default: '1' }}"
+    data-emit-metadata="0"
+    data-input-position="bottom"
+    data-theme="{{ site.giscus.theme | default: 'dark_dimmed' }}"
+    data-lang="en"
+    crossorigin="anonymous"
+    async
+  ></script>
+</div>
+{% endif %}

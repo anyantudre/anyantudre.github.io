@@ -1,0 +1,14 @@
+# This file keeps the _talks directory in git
+# Add your talks and presentations here
+# 
+# Example front matter:
+# ---
+# title: "Talk Title"
+# collection: talks
+# talk_type: "Conference Talk"
+# venue: "Conference Name"
+# date: 2025-01-01
+# location: "City, Country"
+# image: "talks/my-talk-image.png"
+# excerpt: "Short description of your talk."
+# ---

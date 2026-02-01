@@ -1,0 +1,41 @@
+{% include base_path %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="award-card{% if post.featured %} award-card--featured{% endif %}{% if post.category %} award-card--{{ post.category }}{% endif %}">
+  <a href="{{ base_path }}{{ post.url }}" class="award-card__link">
+    {% if post.image %}
+      <div class="award-card__img-wrap">
+        <img 
+          src="{% if post.image contains '://' %}{{ post.image }}{% else %}{{ base_path }}/images/{{ post.image }}{% endif %}" 
+          alt="{{ title }}" 
+          class="award-card__img"
+        />
+      </div>
+    {% endif %}
+    <div class="award-card__content">
+      <div class="award-card__header">
+        <h3 class="award-card__title">{{ title }}</h3>
+        {% if post.amount %}
+          <span class="award-card__amount">{{ post.amount }}</span>
+        {% endif %}
+      </div>
+      {% if post.issuer %}
+        <p class="award-card__issuer"><i class="fa fa-building" aria-hidden="true"></i> {{ post.issuer }}</p>
+      {% endif %}
+      {% if post.award_type %}
+        <p class="award-card__type"><i class="fa fa-trophy" aria-hidden="true"></i> {{ post.award_type }}</p>
+      {% endif %}
+      {% if post.date %}
+        <p class="award-card__date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%B %Y" }}</p>
+      {% endif %}
+      {% if post.excerpt %}
+        <p class="award-card__excerpt">{{ post.excerpt | markdownify | strip_html | truncate: 120 }}</p>
+      {% endif %}
+    </div>
+  </a>
+</div>

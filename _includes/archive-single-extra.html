@@ -1,0 +1,52 @@
+{% include base_path %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="extra-card" data-category="{{ post.category | default: 'thoughts' }}">
+  <a href="{{ base_path }}{{ post.url }}" class="extra-card__link">
+    {% if post.image %}
+      <div class="extra-card__img-wrap">
+        <img 
+          src="{% if post.image contains '://' %}{{ post.image }}{% else %}{{ base_path }}/images/{{ post.image }}{% endif %}" 
+          alt="{{ title }}" 
+          class="extra-card__img"
+        />
+      </div>
+    {% else %}
+      <div class="extra-card__img-wrap">
+        {% case post.category %}
+          {% when 'chess' %}
+            <i class="fa fa-chess extra-card__icon" aria-hidden="true"></i>
+          {% when 'football' %}
+            <i class="fa fa-futbol extra-card__icon" aria-hidden="true"></i>
+          {% when 'philosophy' %}
+            <i class="fa fa-brain extra-card__icon" aria-hidden="true"></i>
+          {% when 'books' %}
+            <i class="fa fa-book extra-card__icon" aria-hidden="true"></i>
+          {% when 'leetcode' %}
+            <i class="fa fa-code extra-card__icon" aria-hidden="true"></i>
+          {% when 'podcasts' %}
+            <i class="fa fa-podcast extra-card__icon" aria-hidden="true"></i>
+          {% else %}
+            <i class="fa fa-lightbulb extra-card__icon" aria-hidden="true"></i>
+        {% endcase %}
+      </div>
+    {% endif %}
+    <div class="extra-card__content">
+      {% if post.category %}
+        <p class="extra-card__category">{{ post.category }}</p>
+      {% endif %}
+      <h3 class="extra-card__title">{{ title }}</h3>
+      {% if post.date %}
+        <p class="extra-card__date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%B %d, %Y" }}</p>
+      {% endif %}
+      {% if post.excerpt %}
+        <p class="extra-card__excerpt">{{ post.excerpt | markdownify | strip_html | truncate: 80 }}</p>
+      {% endif %}
+    </div>
+  </a>
+</div>

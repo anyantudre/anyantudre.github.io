@@ -1,0 +1,77 @@
+---
+layout: single
+---
+{% comment %}
+  This layout inherits from Academic Pages' "single" layout.
+  It renders a paginated list of blog posts with card-style layout.
+{% endcomment %}
+
+<div class="blog-wrapper">
+
+  {% assign posts_to_show = paginator.posts | default: site.posts %}
+  {% for post in posts_to_show %}
+  <article class="blog-card">
+
+    {% comment %} --- Image column (only renders if post.image.path exists) --- {% endcomment %}
+    {% if post.image and post.image.path %}
+    <div class="blog-card__img-wrap">
+      <a href="{{ post.url | relative_url }}">
+        <img
+          src="{{ post.image.path | relative_url }}"
+          alt="{{ post.image.alt | default: post.title }}"
+          class="blog-card__img"
+          loading="lazy"
+        />
+      </a>
+    </div>
+    {% endif %}
+
+    {% comment %} --- Content column --- {% endcomment %}
+    <div class="blog-card__content">
+
+      <div class="blog-card__meta">
+        <time datetime="{{ post.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+          {{ post.date | date: "%B %d, %Y" }}
+        </time>
+        {% if post.categories.size > 0 %}
+          <span class="blog-card__categories">
+            {% for cat in post.categories %}
+              <a href="{{ '/blog/categories/' | relative_url }}#{{ cat | slugify }}">{{ cat }}</a>
+            {% endfor %}
+          </span>
+        {% endif %}
+      </div>
+
+      <h2 class="blog-card__title">
+        <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      </h2>
+
+      {% comment %} --- Subtitle / description (from front matter or auto-excerpt) --- {% endcomment %}
+      {% if post.description %}
+        <p class="blog-card__subtitle">{{ post.description }}</p>
+      {% elsif post.excerpt %}
+        <p class="blog-card__subtitle">{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
+      {% endif %}
+
+    </div>
+  </article>
+  {% endfor %}
+
+  {% comment %} --- Pagination controls --- {% endcomment %}
+  {% if paginator.total_pages > 1 %}
+  <nav class="blog-pagination">
+    {% if paginator.previous_page %}
+      <a href="{{ paginator.previous_page_path | relative_url }}" class="blog-pagination__prev">← Newer</a>
+    {% else %}
+      <span class="blog-pagination__prev blog-pagination__disabled">← Newer</span>
+    {% endif %}
+    <span class="blog-pagination__current">Page {{ paginator.page }} of {{ paginator.total_pages }}</span>
+    {% if paginator.next_page %}
+      <a href="{{ paginator.next_page_path | relative_url }}" class="blog-pagination__next">Older →</a>
+    {% else %}
+      <span class="blog-pagination__next blog-pagination__disabled">Older →</span>
+    {% endif %}
+  </nav>
+  {% endif %}
+
+</div>

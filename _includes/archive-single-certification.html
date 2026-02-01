@@ -1,0 +1,36 @@
+{% include base_path %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="certification-card">
+  <a href="{{ base_path }}{{ post.url }}" class="certification-card__link">
+    {% if post.image %}
+      <div class="certification-card__img-wrap">
+        <img 
+          src="{% if post.image contains '://' %}{{ post.image }}{% else %}{{ base_path }}/images/{{ post.image }}{% endif %}" 
+          alt="{{ title }}" 
+          class="certification-card__img"
+        />
+      </div>
+    {% endif %}
+    <div class="certification-card__content">
+      <h3 class="certification-card__title">{{ title }}</h3>
+      {% if post.issuer %}
+        <p class="certification-card__issuer"><i class="fa fa-building" aria-hidden="true"></i> {{ post.issuer }}</p>
+      {% endif %}
+      {% if post.date %}
+        <p class="certification-card__date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%B %Y" }}</p>
+      {% endif %}
+      {% if post.credential_id %}
+        <p class="certification-card__credential"><i class="fa fa-id-badge" aria-hidden="true"></i> {{ post.credential_id }}</p>
+      {% endif %}
+      {% if post.excerpt %}
+        <p class="certification-card__excerpt">{{ post.excerpt | markdownify | strip_html | truncate: 100 }}</p>
+      {% endif %}
+    </div>
+  </a>
+</div>

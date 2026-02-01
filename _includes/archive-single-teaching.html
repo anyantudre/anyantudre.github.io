@@ -1,0 +1,35 @@
+<!-- {% include base_path %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="teaching-card">
+  <a href="{{ base_path }}{{ post.url }}" class="teaching-card__link">
+    {% if post.image %}
+      <div class="teaching-card__img-wrap">
+        <img 
+          src="{% if post.image contains '://' %}{{ post.image }}{% else %}{{ base_path }}/images/{{ post.image }}{% endif %}" 
+          alt="{{ title }}" 
+          class="teaching-card__img"
+        />
+        {% if post.video_url %}
+          <span class="teaching-card__play-icon"><i class="fa fa-play-circle" aria-hidden="true"></i></span>
+        {% endif %}
+      </div>
+    {% endif %}
+    <div class="teaching-card__content">
+      <h3 class="teaching-card__title">{{ title }}</h3>
+      {% if post.type and post.venue %}
+        <p class="teaching-card__meta">{{ post.type }}, <em>{{ post.venue }}</em>, {{ post.date | date: "%Y" }}</p>
+      {% elsif post.date %}
+        <p class="teaching-card__date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%Y" }}</p>
+      {% endif %}
+      {% if post.excerpt %}
+        <p class="teaching-card__excerpt">{{ post.excerpt | markdownify | strip_html | truncate: 120 }}</p>
+      {% endif %}
+    </div>
+  </a>
+</div> -->

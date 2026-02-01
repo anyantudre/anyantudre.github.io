@@ -1,0 +1,14 @@
+{% comment %}
+  Extra navigation links shown in the sidebar ONLY when viewing /blog/* pages
+{% endcomment %}
+{% if page.url == '/blog/' or page.url contains '/blog/posts/' or page.url contains '/blog/categories/' or page.url contains '/blog/tags/' or page.url contains '/blog/archives/' or page.url contains '/blog/page' %}
+<div class="sidebar__blog-nav">
+  <h4 class="sidebar__blog-nav-title">Blog</h4>
+  <ul>
+    <li><a href="{{ '/blog/' | relative_url }}">All Posts</a></li>
+    <li><a href="{{ '/blog/archives/' | relative_url }}">Archives</a></li>
+    <li><a href="{{ '/blog/categories/' | relative_url }}">Categories</a></li>
+    <li><a href="{{ '/blog/tags/' | relative_url }}">Tags</a></li>
+  </ul>
+</div>
+{% endif %}

@@ -1,0 +1,75 @@
+---
+layout: archive
+title: "Awards & Certifications"
+permalink: /certifications/
+author_profile: true
+---
+
+{% include base_path %}
+
+<section class="section-block">
+  <h2 class="section-block__title"><i class="fa fa-trophy" aria-hidden="true"></i> Awards & Honors</h2>
+  <p class="section-block__intro">Prizes, distinctions, and excellence awards received throughout my academic and professional journey.</p>
+  
+  {% assign sorted_awards = site.awards | sort: 'date' | reverse %}
+  
+  {% comment %} Scholarships & Fellowships {% endcomment %}
+  {% assign scholarship_awards = sorted_awards | where: "category", "scholarship" %}
+  {% if scholarship_awards.size > 0 %}
+  <div class="awards-category awards-category--scholarship">
+    <div class="awards-category__header">
+      <i class="fa fa-graduation-cap awards-category__icon" aria-hidden="true"></i>
+      <h3 class="awards-category__title">Scholarships & Fellowships</h3>
+    </div>
+    <div class="awards-grid">
+    {% for post in scholarship_awards %}
+      {% include archive-single-award.html %}
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  
+  {% comment %} Competitions & Hackathons {% endcomment %}
+  {% assign competition_awards = sorted_awards | where: "category", "competition" %}
+  {% if competition_awards.size > 0 %}
+  <div class="awards-category awards-category--competition">
+    <div class="awards-category__header">
+      <i class="fa fa-medal awards-category__icon" aria-hidden="true"></i>
+      <h3 class="awards-category__title">Competitions & Hackathons</h3>
+    </div>
+    <div class="awards-grid">
+    {% for post in competition_awards %}
+      {% include archive-single-award.html %}
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+  
+  {% comment %} Academic Excellence {% endcomment %}
+  {% assign academic_awards = sorted_awards | where: "category", "academic" %}
+  {% if academic_awards.size > 0 %}
+  <div class="awards-category awards-category--academic">
+    <div class="awards-category__header">
+      <i class="fa fa-star awards-category__icon" aria-hidden="true"></i>
+      <h3 class="awards-category__title">Academic Excellence</h3>
+    </div>
+    <div class="awards-grid">
+    {% for post in academic_awards %}
+      {% include archive-single-award.html %}
+    {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+</section>
+
+<section class="section-block">
+  <h2 class="section-block__title"><i class="fa fa-certificate" aria-hidden="true"></i> Certifications & Courses</h2>
+  <p class="section-block__intro">Professional certifications and online courses completed.</p>
+  
+  <div class="certification-grid">
+  {% assign sorted_certs = site.certifications | sort: 'date' | reverse %}
+  {% for post in sorted_certs %}
+    {% include archive-single-certification.html %}
+  {% endfor %}
+  </div>
+</section>

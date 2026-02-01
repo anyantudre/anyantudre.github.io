@@ -1,0 +1,37 @@
+---
+layout: archive
+title: "Teaching & Talks"
+permalink: /teaching-talks/
+redirect_from:
+  - /teaching/
+  - /talks/
+author_profile: true
+---
+
+{% include base_path %}
+
+<section class="section-block">
+  <h2 class="section-block__title"><i class="fa fa-chalkboard-teacher" aria-hidden="true"></i> Teaching</h2>
+  <p class="section-block__intro">Courses, workshops, and educational initiatives I've been involved in.</p>
+  
+  {% for post in site.teaching reversed %}
+    {% include archive-single.html %}
+  {% endfor %}
+</section>
+
+<section class="section-block">
+  <h2 class="section-block__title"><i class="fa fa-microphone" aria-hidden="true"></i> Talks & Presentations</h2>
+  <p class="section-block__intro">Conference talks, presentations, and public speaking engagements.</p>
+  
+  {% if site.talks.size > 0 %}
+    <div class="talks-grid">
+    {% for post in site.talks reversed %}
+      {% include archive-single-talks.html %}
+    {% endfor %}
+    </div>
+  {% else %}
+    <div class="extra-empty" style="padding: 2rem;">
+      <p><i class="fa fa-info-circle" aria-hidden="true"></i> No talks or presentations added yet. Check back soon!</p>
+    </div>
+  {% endif %}
+</section>

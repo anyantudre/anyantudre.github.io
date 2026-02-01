@@ -1,0 +1,46 @@
+{% include base_path %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="portfolio-card">
+  <div class="portfolio-card__link-wrap">
+    <a href="{{ base_path }}{{ post.url }}" class="portfolio-card__link">
+      {% if post.image %}
+        <div class="portfolio-card__img-wrap">
+          <img 
+            src="{% if post.image contains '://' %}{{ post.image }}{% else %}{{ base_path }}/images/{{ post.image }}{% endif %}" 
+            alt="{{ title }}" 
+            class="portfolio-card__img"
+          />
+        </div>
+      {% endif %}
+      <div class="portfolio-card__content">
+        <h3 class="portfolio-card__title">{{ title }}</h3>
+        {% if post.date %}
+          <p class="portfolio-card__date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%Y" }}</p>
+        {% endif %}
+        {% if post.excerpt %}
+          <p class="portfolio-card__excerpt">{{ post.excerpt | markdownify | strip_html | truncate: 150 }}</p>
+        {% endif %}
+        {% if post.tags %}
+          <div class="portfolio-card__tags">
+            {% for tag in post.tags limit:4 %}
+              <span class="portfolio-card__tag">{{ tag }}</span>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+    </a>
+    
+    {% if post.github_url %}
+      <a href="{{ post.github_url }}" target="_blank" rel="noopener" class="portfolio-card__github" title="View on GitHub">
+        <i class="fab fa-github"></i>
+        {% if post.github_stars %}<span class="portfolio-card__stars">{{ post.github_stars }}</span>{% endif %}
+      </a>
+    {% endif %}
+  </div>
+</div>

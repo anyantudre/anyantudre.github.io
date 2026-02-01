@@ -1,0 +1,37 @@
+---
+layout: archive
+title: "Extra Curricula"
+permalink: /extra/
+author_profile: true
+---
+
+{% include base_path %}
+
+<div class="extra-intro">
+  <p>Beyond code and data, here's a glimpse into my passions, hobbies, and creative pursuits. This is a space for unlimited creativity where I share thoughts on chess, football, philosophy, book reviews, coding challenges, and more.</p>
+</div>
+
+<div class="extra-categories">
+  {% assign categories = "chess,football,philosophy,books,leetcode,podcasts,thoughts" | split: "," %}
+  <div class="extra-categories__nav">
+    <button class="extra-categories__btn active" data-filter="all">All</button>
+    {% for cat in categories %}
+      <button class="extra-categories__btn" data-filter="{{ cat }}">{{ cat | capitalize }}</button>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="extra-grid">
+{% assign sorted_extra = site.extra | sort: 'date' | reverse %}
+{% for post in sorted_extra %}
+  {% include archive-single-extra.html %}
+{% endfor %}
+</div>
+
+{% if site.extra.size == 0 %}
+<div class="extra-empty">
+  <div class="extra-empty__icon"><i class="fa fa-lightbulb" aria-hidden="true"></i></div>
+  <h3>Coming Soon!</h3>
+  <p>This section is under construction. Check back soon for chess game analyses, football tactics, philosophy quotes, book reviews, and more creative content.</p>
+</div>
+{% endif %}

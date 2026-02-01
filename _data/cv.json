@@ -1,0 +1,144 @@
+{
+  "basics": {
+    "name": "Alban NYANTUDRE",
+    "email": "nyantudrealban@gmail.com",
+    "phone": "",
+    "website": "https://anyantudre.github.io",
+    "summary": "Machine Learning Engineer at GO AI Corporation. Final-year MEng student in Data Engineering and AI with expertise in deep learning, computer vision, NLP, and speech technologies for low-resource languages.",
+    "location": {
+      "address": "",
+      "postalCode": "",
+      "city": "Safi",
+      "countryCode": "MA",
+      "region": "Morocco"
+    },
+    "profiles": [
+      {
+        "network": "GitHub",
+        "username": "anyantudre",
+        "url": "https://github.com/anyantudre"
+      },
+      {
+        "network": "LinkedIn",
+        "username": "anyantudre",
+        "url": "https://linkedin.com/in/anyantudre"
+      },
+      {
+        "network": "Kaggle",
+        "username": "waalbannyantudre",
+        "url": "https://kaggle.com/waalbannyantudre"
+      }
+    ]
+  },
+  "work": [
+    {
+      "company": "GO AI Corporation",
+      "position": "Chief Technology Officer",
+      "website": "https://goaicorporation.org/",
+      "startDate": "2024-10",
+      "endDate": "",
+      "summary": "Lead the team responsible for design, development, and deployment of AI solutions. Supervise interns and trained 120+ people in Data Science through bootcamps.",
+      "highlights": []
+    },
+    {
+      "company": "GO AI Corporation",
+      "position": "Machine Learning Engineer",
+      "website": "https://goaicorporation.org/",
+      "startDate": "2024-03",
+      "endDate": "",
+      "summary": "Working on AI-for-social-good projects focused on local languages, education, and access to information. Led the design and training of translation and speech models for Mooré language, adopted by UNICEF, Tanager NGO, and Orange Burkina.",
+      "highlights": []
+    },
+    {
+      "company": "Université de Moncton",
+      "position": "Machine Learning Research Intern",
+      "website": "https://www.umoncton.ca/",
+      "startDate": "2025-02",
+      "endDate": "2025-05",
+      "summary": "Contributed to research on 'Securing AI Models Against Extraction & Poisoning Attacks'. Conducted literature review on model stealing and data poisoning attacks on CNN and Transformer architectures.",
+      "highlights": []
+    },
+    {
+      "company": "Technocolabs Softwares Inc.",
+      "position": "Machine Learning Engineer Intern",
+      "website": "https://www.technocolabs.com/",
+      "startDate": "2023-08",
+      "endDate": "2023-10",
+      "summary": "Developed and deployed ML models to predict prepayment risk of mortgage-backed securities, supporting better risk assessment for financial institutions.",
+      "highlights": []
+    }
+  ],
+  "education": [
+    {
+      "institution": "ENSA Safi - Cadi Ayyad University",
+      "area": "Computer Science - Data Engineering and AI",
+      "studyType": "MEng",
+      "startDate": "2023",
+      "endDate": "Present",
+      "gpa": "17.2/20 (Rank: 1st/19)",
+      "courses": []
+    },
+    {
+      "institution": "ENSA Fez - Sidi Med Ben Abdellah University",
+      "area": "Preparatory Cycle - Mathematics, Physics, and Computer Science",
+      "studyType": "",
+      "startDate": "2021",
+      "endDate": "2023",
+      "gpa": "16.25/20 (Rank: 3rd/262)",
+      "courses": []
+    }
+  ],
+  "skills": [
+    {
+      "name": "Programming",
+      "keywords": ["Python", "R", "SQL", "Java", "C/C++"]
+    },
+    {
+      "name": "AI/ML",
+      "keywords": ["PyTorch", "TensorFlow", "Transformers", "Hugging Face", "LangChain", "OpenCV"]
+    },
+    {
+      "name": "Databases & Big Data",
+      "keywords": ["MongoDB", "Redis", "Spark", "Kafka", "Airflow", "Neo4j"]
+    },
+    {
+      "name": "Cloud & MLOps",
+      "keywords": ["AWS", "Azure", "Docker", "Git", "MLflow", "FastAPI", "Django"]
+    }
+  ],
+  "languages": [
+    {
+      "language": "French",
+      "fluency": "Native"
+    },
+    {
+      "language": "English",
+      "fluency": "Advanced (C1)"
+    },
+    {
+      "language": "Spanish",
+      "fluency": "Beginner (A1)"
+    }
+  ],
+  "interests": [],
+  "references": [],
+  "publications": [],
+  "presentations": [],
+  "teaching": [
+    {
+      "course": "Python Programming Classes",
+      "institution": "Community Initiative",
+      "date": "2025-03",
+      "role": "Instructor",
+      "description": "Delivered weekly Python classes to 60+ students"
+    },
+    {
+      "course": "Data Science & AI Summer Bootcamp",
+      "institution": "GO AI Corporation",
+      "date": "2024",
+      "role": "Lead Instructor",
+      "description": "Instructed a 3-week bootcamp for 120+ learners"
+    }
+  ],
+  "portfolio": []
+}

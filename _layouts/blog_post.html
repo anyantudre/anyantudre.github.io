@@ -1,0 +1,216 @@
+---
+layout: single
+---
+{% comment %}
+  Individual blog post layout.
+  Wraps in Academic Pages' single layout for consistent chrome.
+  Features: Hero image, TOC panel (fixed right), tags, categories, reading time, comments.
+{% endcomment %}
+
+<div class="blog-wrapper blog-wrapper--post">
+
+  <article class="blog-post">
+
+    {% comment %} --- Hero / featured image at top of post --- {% endcomment %}
+    {% if page.image and page.image.path %}
+    <div class="blog-post__hero">
+      <img
+        src="{{ page.image.path | relative_url }}"
+        alt="{{ page.image.alt | default: page.title }}"
+        class="blog-post__hero-img"
+        loading="lazy"
+      />
+      {% if page.image.alt %}
+        <figcaption class="blog-post__hero-caption">{{ page.image.alt }}</figcaption>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% comment %} --- Post meta info --- {% endcomment %}
+    <div class="blog-post__meta">
+      <time datetime="{{ page.date | date: '%Y-%m-%dT%H:%M:%S%z' }}">
+        {{ page.date | date: "%B %d, %Y" }}
+      </time>
+
+      {% comment %} --- Reading time --- {% endcomment %}
+      {% if site.words_per_minute %}
+        {% assign words = content | number_of_words %}
+        {% assign reading_time = words | divided_by: site.words_per_minute %}
+        {% if reading_time < 1 %}{% assign reading_time = 1 %}{% endif %}
+        <span class="blog-post__reading-time">· {{ reading_time }} min read</span>
+      {% endif %}
+    </div>
+
+    {% comment %} --- Categories --- {% endcomment %}
+    {% if page.categories.size > 0 %}
+    <div class="blog-post__categories">
+      <span class="blog-post__categories-label">Categories:</span>
+      {% for cat in page.categories %}
+        <a href="{{ '/blog/categories/' | relative_url }}#{{ cat | slugify }}" class="blog-post__category">{{ cat }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% comment %} --- Post content --- {% endcomment %}
+    <div class="blog-post__content">
+      {{ content }}
+    </div>
+
+    {% comment %} --- Tags --- {% endcomment %}
+    {% if page.tags.size > 0 %}
+    <div class="blog-post__tags">
+      <span class="blog-post__tags-label">Tags:</span>
+      {% for tag in page.tags %}
+        <a href="{{ '/blog/tags/' | relative_url }}#{{ tag | slugify }}" class="blog-post__tag">{{ tag }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% comment %} --- Share buttons --- {% endcomment %}
+    <div class="blog-post__share">
+      <span>Share:</span>
+      <a href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url | url_encode }}" target="_blank" rel="noopener">Twitter / X</a>
+      <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ page.url | absolute_url | url_encode }}&title={{ page.title | url_encode }}" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+
+    {% comment %} --- Post navigation --- {% endcomment %}
+    <nav class="blog-post__nav">
+      {% if page.previous.url %}
+        <a href="{{ page.previous.url | relative_url }}" class="blog-post__nav-prev">
+          <span>← Previous</span>
+          <span class="blog-post__nav-title">{{ page.previous.title }}</span>
+        </a>
+      {% endif %}
+      {% if page.next.url %}
+        <a href="{{ page.next.url | relative_url }}" class="blog-post__nav-next">
+          <span>Next →</span>
+          <span class="blog-post__nav-title">{{ page.next.title }}</span>
+        </a>
+      {% endif %}
+    </nav>
+
+  </article>
+
+  {% comment %} --- Comments section --- {% endcomment %}
+  {% include giscus.html %}
+
+</div>
+
+{% comment %} --- TOC panel (fixed right, outside main content flow) --- {% endcomment %}
+<aside class="blog-toc-fixed" aria-label="Table of Contents">
+  <div class="blog-toc-fixed__inner">
+    <h3 class="blog-toc-fixed__title">Contents</h3>
+    <nav id="blog-toc" class="blog-toc-fixed__nav">
+      <ol></ol>
+    </nav>
+  </div>
+</aside>
+
+{% comment %} --- TOC-building JavaScript --- {% endcomment %}
+<script>
+(function () {
+  var tocNav = document.getElementById('blog-toc');
+  var tocPanel = document.querySelector('.blog-toc-fixed');
+  if (!tocNav || !tocPanel) return;
+
+  var content = document.querySelector('.blog-post__content');
+  if (!content) {
+    tocPanel.style.display = 'none';
+    return;
+  }
+
+  var headings = content.querySelectorAll('h2, h3');
+  if (headings.length === 0) {
+    tocPanel.style.display = 'none';
+    return;
+  }
+
+  var ol = tocNav.querySelector('ol');
+  var currentH2Li = null;
+
+  headings.forEach(function (heading) {
+    if (!heading.id) {
+      heading.id = heading.textContent
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .trim();
+    }
+
+    var li = document.createElement('li');
+    var a = document.createElement('a');
+    a.href = '#' + heading.id;
+    a.textContent = heading.textContent;
+
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      var target = document.getElementById(heading.id);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+
+    if (heading.tagName === 'H2') {
+      li.appendChild(a);
+      ol.appendChild(li);
+      currentH2Li = li;
+    } else if (heading.tagName === 'H3') {
+      if (!currentH2Li) {
+        li.appendChild(a);
+        ol.appendChild(li);
+      } else {
+        var subOl = currentH2Li.querySelector('ol');
+        if (!subOl) {
+          subOl = document.createElement('ol');
+          currentH2Li.appendChild(subOl);
+        }
+        li.appendChild(a);
+        subOl.appendChild(li);
+      }
+    }
+  });
+
+  // --- Active link highlighting on scroll ---
+  var allLinks = tocNav.querySelectorAll('a');
+  var allHeadingIds = Array.from(headings).map(function(h) { return h.id; });
+
+  function updateActive() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var current = '';
+
+    allHeadingIds.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (el && el.getBoundingClientRect().top + window.scrollY <= scrollTop + 100) {
+        current = id;
+      }
+    });
+
+    allLinks.forEach(function (a) {
+      a.classList.remove('blog-toc__link--active');
+      if (a.getAttribute('href') === '#' + current) {
+        a.classList.add('blog-toc__link--active');
+      }
+    });
+  }
+
+  window.addEventListener('scroll', updateActive, { passive: true });
+  updateActive();
+})();
+</script>
+
+{% comment %} --- Language label script for code blocks --- {% endcomment %}
+<script>
+(function () {
+  var codeBlocks = document.querySelectorAll('.blog-post__content .highlight pre');
+  codeBlocks.forEach(function (pre) {
+    var code = pre.querySelector('code');
+    if (code) {
+      var classes = code.className || '';
+      var match = classes.match(/language-(\w+)/);
+      if (match) {
+        pre.setAttribute('data-lang', match[1]);
+      }
+    }
+  });
+})();
+</script>

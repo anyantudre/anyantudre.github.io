@@ -1,0 +1,36 @@
+{% include base_path %}
+
+{% if post.id %}
+  {% assign title = post.title | markdownify | remove: "<p>" | remove: "</p>" %}
+{% else %}
+  {% assign title = post.title %}
+{% endif %}
+
+<div class="talk-card">
+  <a href="{{ base_path }}{{ post.url }}" class="talk-card__link">
+    {% if post.image %}
+      <div class="talk-card__img-wrap">
+        <img 
+          src="{% if post.image contains '://' %}{{ post.image }}{% else %}{{ base_path }}/images/{{ post.image }}{% endif %}" 
+          alt="{{ title }}" 
+          class="talk-card__img"
+        />
+      </div>
+    {% endif %}
+    <div class="talk-card__content">
+      <h3 class="talk-card__title">{{ title }}</h3>
+      {% if post.talk_type %}
+        <p class="talk-card__type"><i class="fa fa-microphone" aria-hidden="true"></i> {{ post.talk_type }}</p>
+      {% endif %}
+      {% if post.venue %}
+        <p class="talk-card__venue"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ post.venue }}{% if post.location %}, {{ post.location }}{% endif %}</p>
+      {% endif %}
+      {% if post.date %}
+        <p class="talk-card__date"><i class="fa fa-calendar" aria-hidden="true"></i> {{ post.date | date: "%B %d, %Y" }}</p>
+      {% endif %}
+      {% if post.excerpt %}
+        <p class="talk-card__excerpt">{{ post.excerpt | markdownify | strip_html | truncate: 100 }}</p>
+      {% endif %}
+    </div>
+  </a>
+</div>
