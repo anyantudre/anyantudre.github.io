@@ -287,6 +287,31 @@
       margin-top: -1rem;
       margin-bottom: 1.5rem;
     }
+    
+    // Math formulas - make them scrollable on overflow
+    .MathJax,
+    .MathJax_Display,
+    mjx-container {
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+    
+    // Block math formulas
+    .MathJax_Display,
+    mjx-container[display="true"] {
+      display: block !important;
+      margin: 1rem 0;
+      padding: 0.5rem 0;
+    }
+    
+    // Inline math - prevent overflow
+    .MathJax:not(.MathJax_Display),
+    mjx-container:not([display="true"]) {
+      display: inline-block;
+      max-width: 100%;
+      vertical-align: middle;
+    }
   }
 
   .blog-post__tags,
@@ -315,7 +340,7 @@
 
     &:hover {
       background-color: var(--global-link-color, #2f7f93);
-      color: var(--global-bg-color, #fff);
+      color: #fff;
     }
   }
 
@@ -387,6 +412,20 @@
 
     .giscus-frame {
       border: none;
+    }
+  }
+}
+
+// Dark mode fixes for blog tags
+[data-theme="dark"] {
+  .blog-post__tag,
+  .blog-post__category {
+    background-color: rgba(47, 127, 147, 0.3);
+    color: #e0e0e0;
+    
+    &:hover {
+      background-color: var(--global-link-color, #2f7f93);
+      color: #fff;
     }
   }
 }

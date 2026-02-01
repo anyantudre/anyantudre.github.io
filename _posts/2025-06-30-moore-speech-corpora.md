@@ -22,7 +22,7 @@ Create a new virtual env with preferably Python 3.10.11:
 ```bash
 conda create -n mooredata python=3.10.11
 conda activate mooredata
-````
+```
 
 Also, I recommend downgrading pip to 24.0 (or below):
 

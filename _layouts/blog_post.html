@@ -146,7 +146,20 @@ layout: single
       e.preventDefault();
       var target = document.getElementById(heading.id);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Smooth scroll with offset for fixed header
+        var headerOffset = 80;
+        var elementPosition = target.getBoundingClientRect().top;
+        var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+        
+        // Update URL hash without jumping
+        if (history.pushState) {
+          history.pushState(null, null, '#' + heading.id);
+        }
       }
     });
 
