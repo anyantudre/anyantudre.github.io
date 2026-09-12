@@ -201,7 +201,28 @@
  {%- for award in cv_awards %}
  {%- assign a_title = award[kt] | default: award.title -%}
  {%- assign a_excerpt = award[kx] | default: award.excerpt -%}
- <li><span class="t">{% if award.link %}<a class="tl" href="{{ award.link }}">{{ a_title | escape_once }}</a>{% else %}{{ a_title | escape_once }}{% endif %}</span>{% if a_excerpt %}<span class="d">{{ a_excerpt | strip_html | strip | escape_once }}</span>{% endif %}<span class="meta">{{ t.orgs[award.issuer] | default: award.issuer | escape_once }} <span class="sep">&middot;</span> <time datetime="{{ award.date | date: '%Y-%m' }}">{{ award.date | date: '%Y' }}</time>{% if award.award_type %} <span class="sep">&middot;</span> {{ t.kinds[award.award_type] | default: award.award_type | escape_once }}{% endif %}</span></li>
+ {%- comment -%}
+   THE ISSUER AND THE YEAR LIVE IN THE RAIL, not inline under the description.
+
+   Two reasons, and the second is the stronger one.
+
+   First, this cell is the longest on the page and it was reserving an 18.5rem
+   margin column (--rail 16rem + --gap 2.5rem, 333px) and leaving it blank all
+   the way down. .cellbody col reserves the rail whether or not anything is put
+   in it; cell 6, Certifications, correctly uses .cellbody band and spends the
+   width. A rail that carries sidenotes is the reason the site looks like a
+   book. A rail left blank down a long cell reads as a layout that ran out of
+   content.
+
+   Second, and the real defect: the SAME awards collection is rendered twice on
+   this site and the two renderings disagreed. home.html:254 puts the issuer in
+   .mn-label and the year in .mn-em out in the rail; this cell put issuer, year
+   and award_type inline in a .meta line under the description. One of the two
+   is right and it is the home page's — so this is now the home page's markup,
+   split on ' - ' the same way, and the only thing added is award_type, which
+   the home page does not carry. No award text is rewritten; this is layout.
+ {%- endcomment -%}
+ <li><span class="marginnote">{% if award.issuer %}<span class="mn-label">{{ t.orgs[award.issuer] | default: award.issuer | split: ' - ' | first }}</span>{% endif %}<span class="mn-em"><time datetime="{{ award.date | date: '%Y-%m' }}">{{ award.date | date: '%Y' }}</time></span>{% if award.award_type %} <span class="sep">&middot;</span> {{ t.kinds[award.award_type] | default: award.award_type | escape_once }}{% endif %}</span><span class="t">{% if award.link %}<a class="tl" href="{{ award.link }}">{{ a_title | escape_once }}</a>{% else %}{{ a_title | escape_once }}{% endif %}</span>{% if a_excerpt %}<span class="d">{{ a_excerpt | strip_html | strip | escape_once }}</span>{% endif %}</li>
  {%- endfor %}
  </ul>
  </div>
@@ -283,14 +304,14 @@
  <div class="cellbody col">
 {%- if lang == 'fr' %}
  <ul class="list list--d">
- <li><span class="t">Responsable du p&ocirc;le D&eacute;bat, club SpeakUp</span><span class="d">Ateliers de d&eacute;bat hebdomadaires pour plus de 150 membres, et une &eacute;quipe men&eacute;e &agrave; la victoire dans une grande comp&eacute;tition.</span><span class="meta">ENSA Safi <span class="sep">&middot;</span> <time datetime="2023-10">{% include redesign/date.html d='2023-10-01' f='my_abbr' %}</time> &mdash; <time datetime="2025-09">{% include redesign/date.html d='2025-09-01' f='my_abbr' %}</time></span></li>
- <li><span class="t">Coordinateur p&eacute;dagogique</span><span class="d">Accompagnement de plus de 100 &eacute;tudiants dans leur inscription et les d&eacute;marches administratives qui suivent.</span><span class="meta">AEBM, F&egrave;s <span class="sep">&middot;</span> <time datetime="2022-09">{% include redesign/date.html d='2022-09-01' f='my_abbr' %}</time> &mdash; <time datetime="2023-09">{% include redesign/date.html d='2023-09-01' f='my_abbr' %}</time></span></li>
+ <li><span class="marginnote"><span class="mn-label">ENSA Safi</span><span class="mn-em"><time datetime="2023-10">{% include redesign/date.html d='2023-10-01' f='my_abbr' %}</time> &mdash; <time datetime="2025-09">{% include redesign/date.html d='2025-09-01' f='my_abbr' %}</time></span></span><span class="t">Responsable du p&ocirc;le D&eacute;bat, club SpeakUp</span><span class="d">Ateliers de d&eacute;bat hebdomadaires pour plus de 150 membres, et une &eacute;quipe men&eacute;e &agrave; la victoire dans une grande comp&eacute;tition.</span></li>
+ <li><span class="marginnote"><span class="mn-label">AEBM, F&egrave;s</span><span class="mn-em"><time datetime="2022-09">{% include redesign/date.html d='2022-09-01' f='my_abbr' %}</time> &mdash; <time datetime="2023-09">{% include redesign/date.html d='2023-09-01' f='my_abbr' %}</time></span></span><span class="t">Coordinateur p&eacute;dagogique</span><span class="d">Accompagnement de plus de 100 &eacute;tudiants dans leur inscription et les d&eacute;marches administratives qui suivent.</span></li>
  </ul>
  <p class="tail"><a href="{{ '/extra/' | relative_url }}" hreflang="en">{{ t.cv_extras }}</a></p>
 {%- else %}
  <ul class="list list--d">
- <li><span class="t">Head of Debate Section, SpeakUp Club</span><span class="d">Weekly debate workshops for 150+ members, and a team led to a win at a major competition.</span><span class="meta">ENSA Safi <span class="sep">&middot;</span> <time datetime="2023-10">Oct 2023</time> &mdash; <time datetime="2025-09">Sep 2025</time></span></li>
- <li><span class="t">Academic Coordinator</span><span class="d">Helped 100+ students through enrolment and the administrative processes that follow it.</span><span class="meta">AEBM, Fez <span class="sep">&middot;</span> <time datetime="2022-09">Sep 2022</time> &mdash; <time datetime="2023-09">Sep 2023</time></span></li>
+ <li><span class="marginnote"><span class="mn-label">ENSA Safi</span><span class="mn-em"><time datetime="2023-10">Oct 2023</time> &mdash; <time datetime="2025-09">Sep 2025</time></span></span><span class="t">Head of Debate Section, SpeakUp Club</span><span class="d">Weekly debate workshops for 150+ members, and a team led to a win at a major competition.</span></li>
+ <li><span class="marginnote"><span class="mn-label">AEBM, Fez</span><span class="mn-em"><time datetime="2022-09">Sep 2022</time> &mdash; <time datetime="2023-09">Sep 2023</time></span></span><span class="t">Academic Coordinator</span><span class="d">Helped 100+ students through enrolment and the administrative processes that follow it.</span></li>
  </ul>
  <p class="tail"><a href="{{ '/extra/' | relative_url }}">{{ t.cv_extras }}</a></p>
 {%- endif %}
