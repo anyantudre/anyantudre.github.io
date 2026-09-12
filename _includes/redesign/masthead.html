@@ -70,9 +70,35 @@
   </svg>
   <a class="wordmark" href="{{ '/' | relative_url }}">{{ site.title }}</a>
   </div>
+  {%- comment -%}
+    THE NAV LABELS STAY IN ENGLISH ON A FRENCH PAGE. His instruction, and the
+    measurement behind it: "Enseignement", "À propos" and "Écrits" are longer
+    than "Teaching", "About" and "Writing", and five labels plus [ EN / FR ]
+    plus the theme control do not fit the --navw 30rem (540px) track in French.
+    The French bar wrapped onto a second row and measured 138px against
+    English's 123px, so the whole site shifted down by 15px on one language.
+
+    site.data.t.en.nav, NOT t.nav: `t` is the page's own language, and reading
+    the labels out of the English block regardless is the whole change. The
+    | default: link.title fallback stays — navigation.yml's own titles are
+    English too, so a key missing from t.en.nav still yields an English label.
+
+    lang="en" is the other half: these are now English words inside a
+    lang="fr" document, and without it a screen reader pronounces "Writing"
+    with French phonemes. It goes on THE FIVE LINKS, not on the <nav>. The
+    <nav> also carries aria-label="{{ t.primary_nav }}" — "Principale" — and
+    holds the [ EN / FR ] control and the theme button whose aria-label is the
+    French "Basculer le thème". lang applies to an element's own aria-label as
+    much as to its text, so lang="en" on the <nav> would have mispronounced
+    three French strings to fix five English ones. Per-link is exact.
+
+    NOT AFFECTED: the hero figure's seven section names and the phone list
+    beneath it (page content, from t[lang]), the headings, the dates, the
+    reading time, the sidenotes and the footer.
+  {%- endcomment -%}
   <nav class="nav" aria-label="{{ t.primary_nav }}">
   {%- for link in site.data.navigation.main %}
-  {%- assign nav_label = t.nav[link.key] | default: link.title -%}
+  {%- assign nav_label = site.data.t.en.nav[link.key] | default: link.title -%}
   {%- if lang == 'fr' -%}
     {%- assign nav_url = link.url | prepend: '/fr' | replace: '//', '/' -%}
     {%- assign nav_page = site.pages | where: 'url', nav_url | first -%}
@@ -80,7 +106,7 @@
   {%- else -%}
     {%- assign nav_url = link.url -%}
   {%- endif %}
-  <a class="nav-{{ link.key }}" href="{{ nav_url | relative_url }}">{{ nav_label }}</a>
+  <a class="nav-{{ link.key }}" href="{{ nav_url | relative_url }}"{% unless lang == 'en' %} lang="en"{% endunless %}>{{ nav_label }}</a>
   {%- endfor %}
   <span class="navtail">
   {%- comment -%}
