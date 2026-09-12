@@ -70,6 +70,24 @@ en:
   toggle_theme: "toggle theme"
   primary_nav: "Primary"
   language: "Language"
+  # Strings that cross into assets/js/redesign.js. The shell serialises this
+  # block into a <script type="application/json" id="ui-strings"> and the IIFE
+  # reads it once. They were English literals inside the JavaScript, which ran
+  # over French posts too — so a French reader copying code got "Copy",
+  # "Copied" and an English live-region announcement. That is this file's own
+  # stated rule, broken in the two places an assistive-technology user notices.
+  js:
+    copy: "Copy"
+    copied: "Copied"
+    copy_failed: "Copy failed"
+    copy_aria: "Copy the code listing to the clipboard"
+    copied_aria: "Code copied to the clipboard"
+    scroll_region: "Scrollable region"
+  # The footer's mail link is an icon only, so its aria-label is its whole name.
+  aria_email: "Email %s"
+  # The post's metadata rail is an <aside>, i.e. a complementary landmark
+  # whether or not it is named. Unnamed, it announced only "complementary".
+  aria_post_details: "About this post"
   nav:
     home: "About"
     work: "Work"
@@ -286,6 +304,17 @@ fr:
   toggle_theme: "changer de thème"
   primary_nav: "Principale"
   language: "Langue"
+  # Voir le bloc `js:` côté anglais : ces chaînes passent dans
+  # assets/js/redesign.js via <script type="application/json" id="ui-strings">.
+  js:
+    copy: "Copier"
+    copied: "Copié"
+    copy_failed: "Échec de la copie"
+    copy_aria: "Copier le code dans le presse-papiers"
+    copied_aria: "Code copié dans le presse-papiers"
+    scroll_region: "Zone défilable"
+  aria_email: "Envoyer un e-mail à %s"
+  aria_post_details: "À propos de cet article"
   nav:
     home: "À propos"
     work: "Travaux"

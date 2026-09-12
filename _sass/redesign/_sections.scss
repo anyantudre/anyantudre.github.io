@@ -5,10 +5,25 @@
 // ===========================================================================
 
 // === 8. THE RIGHT MARGIN COLUMN ===
-.marginnote,.sidenote{display:block;float:right;clear:right;width:var(--rail);margin-right:calc(-1 * var(--noteoff));margin-bottom:var(--s3);margin-top:.35rem;font-size:var(--t-note);line-height:1.42;color:var(--muted);text-align:left;hyphens:auto}
+.marginnote,.sidenote{display:block;float:right;clear:right;width:var(--rail);margin-right:calc(-1 * var(--noteoff));margin-bottom:var(--s3);margin-top:.35rem;font-size:var(--t-note);line-height:1.45;color:var(--muted);text-align:left;hyphens:auto}
 .marginnote{font-family:var(--serif)}
 .mn-label{display:block;font-family:var(--sans);font-size:var(--t-label);font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px}
-.mn-em{font-style:italic;color:var(--text)}
+// FIGURES IN THE RAIL. Every columnar metadata class on the site forces
+// lining, tabular figures — .meta, .res .stars, .nwhen, .yr, .certs .iss/.cy,
+// .pr, .index .dt, .cloud .n — and the right margin column did not, so it fell
+// back to EB Garamond's old-style text figures. In the Awards section that put
+// a stacked run of years down the rail in unequal-width old-style numerals
+// directly beside the Experience dates in lining tabular ones: two figure
+// styles for the same class of information in one horizontal band.
+//
+// It is applied to .mn-em and to any <time> in a note, NOT to the whole
+// .marginnote. Most of what the rail carries is running serif prose — "two
+// years of classes préparatoires", "150+ members" — and old-style figures in
+// running serif are correct. .mn-em and <time> are the slots that hold the
+// dates, and .yr in _base.scss is the precedent: serif, and explicitly lining
+// and tabular for exactly this reason.
+.mn-em{font-style:italic;color:var(--text);font-variant-numeric:lining-nums tabular-nums}
+.marginnote time,.sidenote time{font-variant-numeric:lining-nums tabular-nums}
 .ref{font-family:var(--sans);font-size:.6em;font-weight:600;color:var(--accent);vertical-align:super;line-height:0;padding-left:.12em}
 
 // the profile block
@@ -22,7 +37,7 @@
 
 // social links, lifted from V5: glyph + a real text label, a wrapping run.
 // The glyphs live once in the sprite.
-.socials{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.4rem var(--s3);font-family:var(--sans);font-size:var(--t-label);line-height:1.5}
+.socials{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.4rem var(--s3);font-family:var(--sans);font-size:var(--t-label);line-height:1.55}
 .socials li{display:flex;align-items:center;gap:7px;min-width:0}
 .socials svg{width:16px;height:16px;flex:0 0 auto;color:var(--muted);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .socials a{color:var(--muted);word-break:break-word;text-decoration-thickness:.06em;text-underline-offset:.18em}
@@ -53,6 +68,12 @@
 .res .stars{margin-left:.5em}
 .tail{margin-top:var(--s4);font-family:var(--sans);font-size:var(--t-note);letter-spacing:.01em}
 .tail a{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:.06em;text-underline-offset:.2em}
+// "All 11 projects", "Read the blog", "Full CV", "Back to the blog" — the same
+// omission the language switch had: the text is already oxblood, so the global
+// a:hover{color:var(--accent)} is a no-op and the pointer gets no answer. Same
+// inversion as .res a above, so the three accent-link families on the site now
+// behave identically.
+.tail a:hover{color:var(--text);text-decoration-color:var(--text)}
 
 .list{list-style:none;padding:0;margin:0}
 .list > li{margin-bottom:var(--s3)}
@@ -83,7 +104,18 @@
 .trail > li::before{content:"";position:absolute;left:-1.65rem;top:.9rem;width:1px;height:calc(100% + var(--s6));background:var(--border)}
 .trail > li:last-child::before{display:none}
 // the dot
-.trail > li::after{content:"";position:absolute;left:-1.86rem;top:.53rem;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--bg)}
+// The dot is derived from the spine's own token now, not eyeballed beside it.
+// The spine is left:-1.65rem, width 1px — centre at -29.2px on an 18px root.
+// The dot was left:-1.86rem (-33.48px), 7px wide — centre at -29.98px, three
+// quarters of a pixel to the LEFT of the line it is meant to sit on, which on
+// a 2x display is about 1.5 device pixels of visible offset on a 1px rule. It
+// does not read as an error you can name; it reads as the line looking
+// slightly bent where each dot sits, on the two most-read sections of the home
+// page and again on the CV. calc(-1.65rem - 3px) puts the 7px dot's centre at
+// -29.2px exactly, and because it comes off the same token as the padding it
+// cannot drift if the rail moves. The vertical relationship is already right
+// and is untouched.
+.trail > li::after{content:"";position:absolute;left:calc(-1.65rem - 3px);top:.53rem;width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px var(--bg)}
 .trail h3{margin:0 0 2px}
 .trail .meta{display:block;margin-bottom:var(--s1)}
 .trail p{margin:0}
@@ -112,7 +144,7 @@
 .frac .den{border-top:1px solid currentColor;padding-top:1px;margin-top:1px}
 .rad{padding-right:.04em}
 .rand{border-top:1px solid currentColor;padding:1px .12em 0 0}
-.gloss{font-size:var(--t-note);line-height:1.5;color:var(--muted);margin:0}
+.gloss{font-size:var(--t-note);line-height:1.55;color:var(--muted);margin:0}
 
 // === 12. NEWS — ROUND 6 =====================================================
 // The home page's News section: three milestones at a time, date and
@@ -140,11 +172,35 @@
 .np-in:nth-of-type(5):checked ~ .np-track > .np-page:nth-child(5),
 .np-in:nth-of-type(6):checked ~ .np-track > .np-page:nth-child(6){display:block}
 
+// (A focus ring for the pager dots was written here and then withdrawn. The
+// audit that asked for it reported that the clipped radios left the dots
+// unmarked; that is wrong — the rule further down, on .np-dot::before, already
+// draws the ring on the dot each radio labels, reached by the same sibling
+// combinator. Nothing to add. Left as a note so the claim is not
+// re-investigated. The pager's DOM order is likewise left alone: the radios
+// must precede .np-track for :checked ~ to reach it, and the :has() rewrite
+// that would fix the tab order shows an EMPTY News section in a browser
+// without :has() — a worse failure than the one it cures.)
+
 // the row
 .nrow{display:grid;grid-template-columns:8.5rem 1fr;column-gap:var(--s3);align-items:start;margin-bottom:var(--s3);text-decoration:none;color:inherit}
 .nrow:last-child{margin-bottom:0}
 .nwhen{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.015em;line-height:1.55;color:var(--muted);font-variant-numeric:lining-nums tabular-nums;padding-top:.42rem}
-.nwhen time{display:block;font-weight:600;text-transform:uppercase;letter-spacing:.1em}
+// THE ONE DATE ON THE SITE SET IN CAPITALS. Every other date is Karla in
+// sentence case — .meta at .015em, .certs .cy, .byline, .index .dt, .postside,
+// the CV trail — and this one wore the uppercase LABEL uniform instead: Karla
+// 600, uppercase, .1em. That uniform is the site's second voice and it earns
+// its place, but it belongs on things that NAME something (a margin note's
+// subject, a rubric, a section in a diagram), not on a thing that carries
+// data. "AUG 2026" is also the only member of the family that breaks the
+// site's own rule about dates, and on /fr/ it uppercases accented lowercase —
+// "AOÛT 2026" — which is the ugliest form French typography has.
+//
+// Weight 600 stays: it is what anchors the left column of the News row. The
+// caps and the label tracking go, and .015em is the tracking every other date
+// on the site already uses. The row's subject becomes unambiguously .nwhat,
+// the --t-h3 italic serif title it was competing with.
+.nwhen time{display:block;font-weight:600;letter-spacing:.015em}
 .nwho{display:block;margin-top:2px}
 .nwhat{font-family:var(--serif);font-style:italic;font-weight:400;font-size:var(--t-h3);line-height:1.25;color:var(--text);transition:color 160ms ease,text-decoration-thickness 160ms ease}
 .nrow:hover .nwhat,.nrow:focus-visible .nwhat{color:var(--accent);text-decoration-thickness:.11em}
