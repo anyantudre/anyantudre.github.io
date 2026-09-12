@@ -34,8 +34,11 @@
     "uglify-js": "^3.17.4"
   },
   "scripts": {
-    "uglify": "uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js node_modules/plotly.js-dist-min/plotly.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js",
+    "comment:uglify": "Plotly is deliberately NOT bundled here. It was 3.5 MB of a 4.6 MB main.min.js and exactly one page uses it (/markdown/). `build:plotly` copies the dist file to assets/js/vendor/ and _layouts/redesign-default.html loads it only on a page that really contains a plotly fence.",
+    "uglify": "uglifyjs node_modules/jquery/dist/jquery.min.js node_modules/fitvids/dist/fitvids.min.js node_modules/jquery-smooth-scroll/jquery.smooth-scroll.min.js assets/js/plugins/jquery.greedy-navigation.js assets/js/_main.js -c -m -o assets/js/main.min.js",
+    "comment:plotly": "assets/js/lib, not assets/js/vendor: _config.yml excludes assets/js/vendor from the build, so a file placed there is never published.",
+    "build:plotly": "node -e \"const f=require('fs');f.mkdirSync('assets/js/lib',{recursive:true});f.copyFileSync('node_modules/plotly.js-dist-min/plotly.min.js','assets/js/lib/plotly.min.js')\"",
     "watch:js": "onchange \"assets/js/**/*.js\" -e \"assets/js/main.min.js\" -- npm run build:js",
-    "build:js": "npm run uglify"
+    "build:js": "npm run uglify && npm run build:plotly"
   }
 }

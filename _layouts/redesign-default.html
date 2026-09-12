@@ -63,13 +63,20 @@
       })();
     </script>
 
+    <!-- The two preconnects sit ABOVE head.html deliberately. head.html carries
+         main.css, and a <link rel=preconnect> discovered after it is queued
+         behind it — the DNS, TCP and TLS cost of fonts.gstatic.com is then
+         paid in series with the stylesheet instead of alongside it. Moving two
+         lines up the file buys one round trip on the render-blocking path and
+         changes nothing else. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     {% include head.html %}
     {% include head/custom.html %}
 
     <!-- EB Garamond for the reading face and the mathematics, Karla for the
          labels, metadata and the nav. Both are non-negotiable in the design. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Karla:wght@400;600&display=swap">
   </head>
 
@@ -94,7 +101,41 @@
     </div>
 
     {% include footer/mathjax.html %}
+    {%- comment -%}
+      PLOTLY, ON THE ONE PAGE THAT HAS A CHART.
+
+      It used to be linked into assets/js/main.min.js, where it was 3.5 MB of a
+      4.6 MB bundle downloaded by all 83 pages — for a single Academic Pages
+      demo page. The hook in assets/js/_main.js was already gated on
+      `pre>code.language-plotly` being present, so nothing but the bytes was
+      ever spent elsewhere; only the bytes are removed here.
+
+      A classic <script> (not deferred) runs before main.min.js, which ships as
+      a module and is therefore deferred by definition — so `Plotly` is defined
+      by the time the hook looks for it, exactly as when it was concatenated
+      ahead of it in the bundle.
+
+      assets/js/lib, not assets/js/vendor — _config.yml excludes the latter
+      from the build, so a file put there is never published.
+    {%- endcomment -%}
+    {%- if content contains 'language-plotly' %}
+    <script src="{{ base_path }}/assets/js/lib/plotly.min.js"></script>
+    {%- endif %}
     {% include scripts.html %}
+    {%- comment -%}
+      THE STRINGS assets/js/redesign.js NEEDS, in the page's own language.
+
+      The copy button's three states, its two aria-labels and the name given to
+      a listing that scrolls were English literals inside the JavaScript — and
+      that script runs over every [data-prose] body, French posts and French
+      project pages included. _data/t.yml's own header calls that a bug: "A bare
+      English literal in a template is a bug: it would show up untranslated in
+      the middle of a French page."
+
+      `jsonify` handles the escaping, so an apostrophe in a French string
+      cannot break the block.
+    {%- endcomment %}
+    <script type="application/json" id="ui-strings">{{ t.js | jsonify }}</script>
     <script src="{{ base_path }}/assets/js/redesign.js"></script>
 
   </body>
