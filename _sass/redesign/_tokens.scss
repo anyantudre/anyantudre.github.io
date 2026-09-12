@@ -24,10 +24,19 @@
   --s6:calc(6*var(--u)); --s8:calc(8*var(--u)); --s12:calc(12*var(--u));
 
   // GRID — every token in rem, root 18px. Sheet 94% capped at 62rem (1116)
-  // − 4rem pad → 1044 box. --prose 648 ≈ 70 chars · --rail 288 RIGHT ·
-  // --gap 45 · --noteoff 333 · --wide 981 ≤ 1044. Notes float right on
+  // − 4rem pad → 1044 box. --prose 648 · --rail 324 RIGHT · --gap 45 ·
+  // --noteoff 369 · --wide 1017 ≤ 1044. Notes float right on
   // margin-right:−noteoff, so they cost no line box.
-  --shell:62rem; --pad-left:4rem;--prose:36rem; --rail:16rem; --gap:2.5rem;--noteoff:calc(var(--rail) + var(--gap));--wide:calc(var(--prose) + var(--noteoff));
+  //
+  // --rail IS 18rem, NOT 16. His decision: widen the margin column and only
+  // the margin column. --prose stays 36rem, so the reading measure does not
+  // move; --shell stays 62rem, so the sheet does not move. --noteoff and
+  // --wide are computed from --rail, so every right edge on the site — the
+  // masthead band, each section rule, the footer rule — follows in one step.
+  // The content band goes 54.5rem → 56.5rem (981 → 1017px) inside a 1044px
+  // box, so the rail still cannot overhang the sheet: 27px to spare at the
+  // 62rem cap, and below it --wide yields to min(--wide,100%) first.
+  --shell:62rem; --pad-left:4rem;--prose:36rem; --rail:18rem; --gap:2.5rem;--noteoff:calc(var(--rail) + var(--gap));--wide:calc(var(--prose) + var(--noteoff));
 
   // set-back: a secondary heading and its rule stay on the container's
   // left edge; only the CONTENT steps in, right edge unchanged.
@@ -41,9 +50,15 @@
 
   // two more lanes: --pr is the CV's prompt gutter, --side the post's LEFT
   // apparatus column. The post runs a WIDER gutter between its prose and its
-  // outline — --gap goes to 4rem there — so --wide is 36 + 16 + 4 = 56rem and
-  // 2 + 10 + 2.5 + 56 = 70.5rem = --shell-post.
-  --pr:3.5rem; --side:10rem; --sidegap:2.5rem; --shell-post:70.5rem;
+  // outline — --gap goes to 4rem there — so --wide is 36 + 18 + 4 = 58rem and
+  // 2 + 10 + 2.5 + 58 = 72.5rem = --shell-post.
+  //
+  // --shell-post IS THE ONE MEASURE THAT DOES NOT FOLLOW --rail BY ITSELF, so
+  // it moved with it: 70.5 → 72.5rem, the same +2rem. Left at 70.5 the post's
+  // grid would still have ended on one right edge — minmax(0,--wide) simply
+  // absorbs the difference — but it would have absorbed it out of the prose,
+  // capping the post's measure at 612px instead of the 648 --prose asks for.
+  --pr:3.5rem; --side:10rem; --sidegap:2.5rem; --shell-post:72.5rem;
 --portrait:200px;--cell:1.5rem;  // heatmap cell
   --field-h:12.5rem;  // contour field
   --rule-h:.9rem;  // band height
