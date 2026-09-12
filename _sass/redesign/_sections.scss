@@ -5,7 +5,7 @@
 // ===========================================================================
 
 // === 8. THE RIGHT MARGIN COLUMN ===
-.marginnote,.sidenote{display:block;float:right;clear:right;width:var(--rail);margin-right:calc(-1 * var(--noteoff));margin-bottom:var(--s3);margin-top:.35rem;font-size:var(--t-note);line-height:1.42;color:var(--muted);text-align:left;hyphens:auto}
+.marginnote,.sidenote{display:block;float:right;clear:right;width:var(--rail);margin-right:calc(-1 * var(--noteoff));margin-bottom:var(--s3);margin-top:.35rem;font-size:var(--t-note);line-height:1.45;color:var(--muted);text-align:left;hyphens:auto}
 .marginnote{font-family:var(--serif)}
 .mn-label{display:block;font-family:var(--sans);font-size:var(--t-label);font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:3px}
 // FIGURES IN THE RAIL. Every columnar metadata class on the site forces
@@ -37,7 +37,7 @@
 
 // social links, lifted from V5: glyph + a real text label, a wrapping run.
 // The glyphs live once in the sprite.
-.socials{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.4rem var(--s3);font-family:var(--sans);font-size:var(--t-label);line-height:1.5}
+.socials{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:.4rem var(--s3);font-family:var(--sans);font-size:var(--t-label);line-height:1.55}
 .socials li{display:flex;align-items:center;gap:7px;min-width:0}
 .socials svg{width:16px;height:16px;flex:0 0 auto;color:var(--muted);fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .socials a{color:var(--muted);word-break:break-word;text-decoration-thickness:.06em;text-underline-offset:.18em}
@@ -144,7 +144,7 @@
 .frac .den{border-top:1px solid currentColor;padding-top:1px;margin-top:1px}
 .rad{padding-right:.04em}
 .rand{border-top:1px solid currentColor;padding:1px .12em 0 0}
-.gloss{font-size:var(--t-note);line-height:1.5;color:var(--muted);margin:0}
+.gloss{font-size:var(--t-note);line-height:1.55;color:var(--muted);margin:0}
 
 // === 12. NEWS — ROUND 6 =====================================================
 // The home page's News section: three milestones at a time, date and
