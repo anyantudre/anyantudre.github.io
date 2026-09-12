@@ -59,6 +59,14 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 .lang .br,.lang .sl{color:var(--muted)}
 .lang .sl{padding:0 .1em}
 .lang a{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:.07em;text-underline-offset:.2em}
+// The language switch is the most consequential control in a bilingual site's
+// chrome, and it was the one link family on the page that gave the pointer no
+// answer: it inherits a:hover{color:var(--accent)} from _base.scss, which is a
+// no-op on text that is already oxblood. The site had already decided what an
+// accent-coloured link does on hover — .res a inverts to ink — so this adopts
+// that rule rather than inventing a second behaviour. The current language is
+// still told apart by aria-current and its own [ ] bracket pair.
+.lang a:hover{color:var(--text);text-decoration-color:var(--text)}
 
 // INTEGRATION — the switch and the theme control travel together as the nav's
 // last flex child, so the bar keeps the six children the design balanced. The

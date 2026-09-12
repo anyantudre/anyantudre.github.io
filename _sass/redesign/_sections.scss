@@ -53,6 +53,12 @@
 .res .stars{margin-left:.5em}
 .tail{margin-top:var(--s4);font-family:var(--sans);font-size:var(--t-note);letter-spacing:.01em}
 .tail a{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:.06em;text-underline-offset:.2em}
+// "All 11 projects", "Read the blog", "Full CV", "Back to the blog" — the same
+// omission the language switch had: the text is already oxblood, so the global
+// a:hover{color:var(--accent)} is a no-op and the pointer gets no answer. Same
+// inversion as .res a above, so the three accent-link families on the site now
+// behave identically.
+.tail a:hover{color:var(--text);text-decoration-color:var(--text)}
 
 .list{list-style:none;padding:0;margin:0}
 .list > li{margin-bottom:var(--s3)}

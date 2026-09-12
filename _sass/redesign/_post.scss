@@ -93,6 +93,11 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 .codeblock pre{clear:none}
 .copy{position:absolute;top:var(--s1);right:var(--s1);z-index:1;font-family:var(--mono);font-size:var(--t-label);line-height:1;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.34rem .52rem;cursor:pointer;transition:color 150ms ease,border-color 150ms ease}
 .copy:hover{color:var(--accent);border-color:var(--accent)}
+// a pressed state in the page's own vocabulary: COLOUR ONLY. The site's whole
+// argument is stillness, so nothing here scales or lifts under the cursor —
+// the ground shifts to --accent-soft for the duration of the press, which says
+// "pressed" without moving type. --accent-soft is themed, so it works in both.
+.copy:active{background:var(--accent-soft)}
 .copy[data-copied]{color:var(--accent);border-color:var(--accent)}
 .copy[hidden]{display:none}
 
