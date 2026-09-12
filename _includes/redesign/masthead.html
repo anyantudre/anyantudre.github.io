@@ -132,7 +132,22 @@
   {%- else %}
   <span class="lang"><span class="gs"><span class="cur" aria-current="true">EN</span></span> <span class="sl">/</span> <span class="gs"><a href="{{ other_url | relative_url }}" hreflang="fr" lang="fr">FR</a></span></span>
   {%- endif %}
-  <span id="theme-toggle" class="tgl"><a role="button" aria-labelledby="theme-icon"><i id="theme-icon" class="fa-solid fa-sun" aria-hidden="true" title="{{ t.toggle_theme }}"></i></a></span>
+  {%- comment -%}
+    A REAL <button>, not an <a role="button"> with no href. The old markup was
+    unreachable from the keyboard — an anchor without an href is not focusable
+    and takes no tab stop, and assets/js/_main.js binds click and nothing else
+    — so a dark-theme reader who navigates by keyboard could not set the very
+    preference the boot script in <head> exists to honour. The stylesheet had
+    already been written for a control that CAN take focus (.tgl:focus-within,
+    _chrome.scss), which is the tell that this was a bug and not a decision.
+
+    A <button> is focusable, fires click on Enter and Space for free, and keeps
+    the id, the class, the icon id and the existing jQuery binding untouched.
+    The accessible name moves to a real aria-label: aria-labelledby pointed at
+    an aria-hidden <i> with no text content, a name computation that only
+    survived because Font Awesome's title attribute happened to be there.
+  {%- endcomment -%}
+  <button id="theme-toggle" class="tgl" type="button" aria-label="{{ t.toggle_theme }}"><i id="theme-icon" class="fa-solid fa-sun" aria-hidden="true"></i></button>
   </span>
   </nav>
   </div>
