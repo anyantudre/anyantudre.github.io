@@ -84,7 +84,6 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 // for a control that could never receive focus, and now does.
 .tgl{font-size:var(--t-label);line-height:1;color:var(--muted);cursor:pointer;transition:color 150ms ease}
 button.tgl{background:none;border:0;padding:0;margin:0;font-family:inherit;color:var(--muted);vertical-align:baseline;-webkit-appearance:none;appearance:none}
-.tgl a{color:inherit;text-decoration:none;cursor:pointer}
 .tgl:hover,.tgl:focus-within,.tgl:focus-visible{color:var(--accent)}
 
 // === 16. FOOTER — a loss surface; each iterate of the descent links up ===
