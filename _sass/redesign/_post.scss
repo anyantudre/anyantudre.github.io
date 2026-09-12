@@ -206,8 +206,10 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 // html[data-view="post"] — (0,1,1) — so it also outranks the :root{--gap}
 // declared in the narrower breakpoints below.
 @media (min-width:960px){html[data-view="post"]{--gap:4rem}}
-// ≥1300px the post earns its left lane: 2 + 10 + 2.5 + 56 = 70.5rem to
-// the pixel, so masthead, title band and footer end on one edge.
+// ≥1300px the post earns its left lane: 2 + 10 + 2.5 + 58 = 72.5rem to
+// the pixel, so masthead, title band and footer end on one edge. The 58 is
+// the POST's --wide (--prose 36 + --rail 18 + --gap 4), so this number moves
+// with --rail: it was 56 → 70.5rem while --rail was 16rem.
 @media (min-width:1300px){html[data-view="post"] .sheet{width:calc(100% - 3rem);max-width:var(--shell-post);padding-left:var(--s4)}
   html[data-view="post"] .band{width:100%}
   .postgrid{grid-template-columns:var(--side) minmax(0,var(--wide));column-gap:var(--sidegap)}
