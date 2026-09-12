@@ -120,5 +120,43 @@
  </a>
  {%- endfor %}
  </svg>
+
+ {%- comment -%}
+   THE SAME SEVEN ANCHORS, AS A PLAIN LIST — phones only (≤639px in CSS).
+
+   The figure is not decoration: the comment at the head of this file says its
+   job outright, "every output unit is a real anchor into the page below, so
+   the figure doubles as a table of contents". On a phone it could not do that
+   job. The viewBox is 662 user units wide and the column at 375px is 330 CSS
+   px, so the figure paints at a scale of 0.4985: .lab at font-size 12px lands
+   at 5.98px, and the <rect class="hit" height="22"> that is the entire click
+   and hover target lands at 10.97px — under half the 24 CSS px WCAG 2.5.8
+   asks of a pointer target, with seven of them stacked 13.96px apart.
+
+   No amount of CSS fixes that: to render 12px text legibly the figure needs
+   roughly its own 662px, and a container that scrolled sideways would start
+   the reader on the network with every section name off-screen to the right —
+   a worse table of contents than one that does not fit.
+
+   So the figure stays exactly as it is — geometry, weights, hover wiring and
+   deterministic no-JS field all untouched — and the seven names are ALSO
+   emitted as a list from the SAME sect_id and sect_lab arrays, so the two can
+   never drift apart. The list is hidden above 639px and dressed in the site's
+   existing outline vocabulary (_sass/redesign/_devices.scss), the one the
+   post's .tocwrap already uses, so no new component and no new type step
+   enters the page.
+
+   aria-hidden + tabindex="-1": the seven <a class="out"> above are real
+   anchors carrying real <title>s and remain the semantic table of contents at
+   every width. This list is a VISUAL restatement of them for small screens,
+   so it is kept out of the accessibility tree and out of the tab order rather
+   than reading the page's seven sections to a screen reader twice.
+ {%- endcomment -%}
+ <ul class="mlplist" aria-hidden="true">
+ {%- for b in (0..6) -%}
+ <li><a href="#{{ sect_id[b] }}" tabindex="-1">{{ sect_lab[b] }}</a></li>
+ {%- endfor -%}
+ </ul>
+
  <p class="mlpcap">{{ t.mlp_cap }}</p>
 </nav>
