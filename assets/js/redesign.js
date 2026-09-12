@@ -26,6 +26,28 @@
 (function(){
  var d=document,root=d.documentElement;
 
+ /* THE UI STRINGS, IN THE PAGE'S OWN LANGUAGE.
+
+    Everything this script writes into the document used to be an English
+    literal — "Copy", "Copied", "Copy failed", and the two aria-labels — and
+    this script runs over every [data-prose] body, which includes the French
+    posts and the French project pages. _data/t.yml carries them now; the shell
+    serialises its `js:` block into #ui-strings and this reads it once.
+
+    The English fallbacks stay as the last resort: if the JSON is missing or
+    malformed the buttons must still be labelled, never blank. */
+ var T={copy:"Copy",copied:"Copied",copy_failed:"Copy failed",
+        copy_aria:"Copy the code listing to the clipboard",
+        copied_aria:"Code copied to the clipboard",
+        scroll_region:"Scrollable region"};
+ try{
+  var tn=d.getElementById("ui-strings");
+  if(tn&&tn.textContent){
+   var tj=JSON.parse(tn.textContent);
+   for(var tk in tj)if(tj[tk])T[tk]=tj[tk];
+  }
+ }catch(e){}
+
  /* === 0. INTEGRATION — THE MARKDOWN PASS ===
     Three jobs the design does in its markup and a rendered Markdown body
     cannot: the spectrogram rule under each h2, the outline built from the
@@ -110,11 +132,63 @@
     box.appendChild(node);
     var btn=d.createElement("button");
     btn.className="copy";btn.type="button";btn.hidden=true;
-    btn.setAttribute("aria-label","Copy the code listing to the clipboard");
-    btn.textContent="Copy";
+    btn.setAttribute("aria-label",T.copy_aria);
+    btn.textContent=T.copy;
     (box.querySelector("td.rouge-code")||box).appendChild(btn);
    }
   }
+ })();
+
+ /* 0d. A BOX THAT SCROLLS HAS TO BE REACHABLE FROM A KEYBOARD.
+
+    Six rule sets in the stylesheet create horizontally scrolling boxes: `pre`,
+    `pre.highlight`, `td.rouge-code pre`, `.chartwrap` (which wraps a .chart
+    with a 26rem min-width, so it WILL overflow at 375px by construction),
+    `.eqn` (white-space:nowrap) and `.colo-m`. None of them contained anything
+    focusable, and none carried a tabindex — so a keyboard-only reader, and
+    every switch-access user, simply could not see the right-hand part of a
+    code listing, a chart or a long equation. One post alone has 38 <pre>
+    elements. It is axe's `scrollable-region-focusable`, WCAG 2.1.1 Level A,
+    and on a phone it is the normal case rather than an edge case.
+
+    THE OVERFLOW TEST IS THE GATE, deliberately. Making every listing a tab
+    stop would add dozens of stops to a long tutorial for no gain; only a box
+    that actually overflows AT THE CURRENT WIDTH becomes one. Which means the
+    test has to run again on resize, or a stop appears or disappears silently
+    as the window changes — hence the debounced re-run, which also clears the
+    attributes again when a box stops overflowing.
+
+    role="region" + an accessible name is what makes the stop announce itself
+    as something rather than as an anonymous focusable div; the name comes from
+    _data/t.yml, so it is French on a French page. */
+ (function(){
+  var SEL="pre, .chartwrap, .eqn, .colo-m",pending;
+  function mark(){
+   var xs=d.querySelectorAll(SEL),i,el;
+   for(i=0;i<xs.length;i++){
+    el=xs[i];
+    /* An inner <pre> whose scrolling ancestor is already a stop would double
+       up; the code cell's own pre is the one that scrolls, so skip a pre that
+       contains the rouge table rather than the code. */
+    if(el.nodeName==="PRE"&&el.querySelector("table.rouge-table"))continue;
+    if(el.scrollWidth>el.clientWidth+1){
+     if(el.getAttribute("data-scrollable"))continue;
+     el.setAttribute("data-scrollable","");
+     el.setAttribute("tabindex","0");
+     el.setAttribute("role","region");
+     el.setAttribute("aria-label",T.scroll_region);
+    }else if(el.hasAttribute("data-scrollable")){
+     el.removeAttribute("data-scrollable");
+     el.removeAttribute("tabindex");
+     el.removeAttribute("role");
+     el.removeAttribute("aria-label");
+    }
+   }
+  }
+  mark();
+  window.addEventListener("resize",function(){
+   clearTimeout(pending);pending=setTimeout(mark,200);
+  });
  })();
 
  /* 0. OFF-SITE LINKS OPEN IN A NEW TAB.
@@ -179,14 +253,14 @@
    var pre=b.parentNode.querySelector("pre"),lab=b.getAttribute("aria-label"),t;
    if(!pre)return;
    b.removeAttribute("hidden");
-   function reset(){b.textContent="Copy";b.removeAttribute("data-copied");b.setAttribute("aria-label",lab);}
+   function reset(){b.textContent=T.copy;b.removeAttribute("data-copied");b.setAttribute("aria-label",lab);}
    b.addEventListener("click",function(){
     navigator.clipboard.writeText(pre.textContent).then(function(){
-     b.textContent="Copied";b.setAttribute("data-copied","");
-     b.setAttribute("aria-label","Code copied to the clipboard");
+     b.textContent=T.copied;b.setAttribute("data-copied","");
+     b.setAttribute("aria-label",T.copied_aria);
      clearTimeout(t);t=setTimeout(reset,1500);
     },function(){
-     b.textContent="Copy failed";clearTimeout(t);t=setTimeout(reset,1500);
+     b.textContent=T.copy_failed;clearTimeout(t);t=setTimeout(reset,1500);
     });
    });
   })(bs[i]);

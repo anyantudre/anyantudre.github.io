@@ -80,7 +80,7 @@
   <div class="foot-links">
   <ul class="socials socials--foot">
   {%- if site.author.email %}
-  <li><a href="mailto:{{ site.author.email }}" aria-label="Email {{ site.author.name }}"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-mail"/></svg></a></li>
+  <li><a href="mailto:{{ site.author.email }}" aria-label="{{ t.aria_email | replace: '%s', site.author.name }}"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-mail"/></svg></a></li>
   {%- endif %}
   {%- if site.author.github %}
   <li><a href="https://github.com/{{ site.author.github }}" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#ic-gh"/></svg></a></li>

@@ -14,7 +14,14 @@
 .flow h3{margin:var(--s6) 0 var(--s2)}
 .flow ul,.flow ol{padding-left:1.2em;margin:0 0 var(--s3);clear:right}
 .flow li{margin-bottom:var(--s1)}
-.flow li::marker{color:var(--faint)}
+// _tokens.scss states the rule: --faint is 2.39:1, so it is "rules and markers
+// ONLY, never read text". A BULLET is a marker — it says "this is an item" and
+// nothing more, and a reader who cannot resolve it loses nothing. A NUMERAL is
+// read text: in a tutorial, "step 3" is how the prose refers back to it. So the
+// two part company here, and the ordered list takes --muted (6.69:1 light,
+// 6.61:1 dark).
+.flow ul li::marker{color:var(--faint)}
+.flow ol li::marker{color:var(--muted)}
 code{font-family:var(--mono);font-size:.82em;font-style:normal}
 // .8rem = 14.4px, a step under --t-note: the listing's longest line
 // (61 characters) then clears the 36rem measure without scrolling
@@ -305,5 +312,22 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 [data-prose] .rouge-table td, .legacy .rouge-table td{padding:0;border:0;vertical-align:top}
 [data-prose] .rouge-table pre, .legacy .rouge-table pre{background:none;border:0;border-radius:0;margin:0;padding:var(--s3) 0;font-size:1em;line-height:inherit;overflow:visible}
 [data-prose] td.rouge-gutter, .legacy td.rouge-gutter{width:2.9rem;border-right:1px solid var(--border);text-align:right;user-select:none;-webkit-user-select:none}
-[data-prose] td.rouge-gutter pre, .legacy td.rouge-gutter pre{padding-left:var(--s2);padding-right:var(--s2);color:var(--faint)}
+// The numerals were --faint, and the block comment above justified it as
+// "markers, never read text". That was the wrong classification. Rouge runs
+// with line_numbers on, so every listing in every post and every project page
+// carries this column, and "line 14" is exactly how a tutorial refers to its
+// own code — it IS read text, at 2.39:1 in light and 3.16:1 in dark, the only
+// text on the site that failed 4.5:1.
+//
+// The colour is --muted — 6.69:1 on the light ground, 6.61:1 on the dark —
+// which is the site's own secondary-text tier and already carries every other
+// piece of metadata. Against code set in --text at 18.8:1 that is a clear step
+// down, so the gutter still reads as subordinate; it just reads.
+//
+// An `opacity` on top was tried, to take back some of the weight the designer
+// had chosen. It does not survive the arithmetic: opacity composites toward
+// the page, and .78 of --muted lands on 3.95:1. Anything low enough to be
+// visible as a softening is low enough to fail, so there is no version of that
+// idea worth having.
+[data-prose] td.rouge-gutter pre, .legacy td.rouge-gutter pre{padding-left:var(--s2);padding-right:var(--s2);color:var(--muted)}
 [data-prose] td.rouge-code pre, .legacy td.rouge-code pre{padding-left:var(--s3);padding-right:var(--s3);overflow-x:auto}

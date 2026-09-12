@@ -108,6 +108,20 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 .fv--dn .l{top:10px}
 .fv:hover .l,.fv:focus-visible .l{color:var(--accent)}
 .fv:hover .d,.fv:focus-visible .d{background:var(--accent);border-color:var(--accent)}
+// THE FOCUS RING, ON SOMETHING THE READER CAN SEE.
+//
+// .fv is a 0x0 box placed at a point on the loss surface; its dot and its
+// label are absolutely positioned around that point. The global
+// :focus-visible{outline} in _base.scss therefore drew a ~6x6px square at the
+// collapsed origin, not around the waypoint — so seven links, which are the
+// footer's entire navigation, had no usable focus indicator. What feedback
+// there was (the label turning oxblood) is also the hover state, so keyboard
+// position was indistinguishable from a mouse passing by.
+//
+// The outline moves to the label, which has width, height and a padding box
+// already. The colour change stays on top of it.
+.fv:focus-visible{outline:none}
+.fv:focus-visible .l{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 // ROUND 6 — the formula and its citation are one right-aligned pair: the
 // update rule on its own line, hard against the right edge, and the
 // tensor-shape citation DIRECTLY below it in the bracket form .attrib uses

@@ -122,6 +122,20 @@
     <script src="{{ base_path }}/assets/js/lib/plotly.min.js"></script>
     {%- endif %}
     {% include scripts.html %}
+    {%- comment -%}
+      THE STRINGS assets/js/redesign.js NEEDS, in the page's own language.
+
+      The copy button's three states, its two aria-labels and the name given to
+      a listing that scrolls were English literals inside the JavaScript — and
+      that script runs over every [data-prose] body, French posts and French
+      project pages included. _data/t.yml's own header calls that a bug: "A bare
+      English literal in a template is a bug: it would show up untranslated in
+      the middle of a French page."
+
+      `jsonify` handles the escaping, so an apostrophe in a French string
+      cannot break the block.
+    {%- endcomment %}
+    <script type="application/json" id="ui-strings">{{ t.js | jsonify }}</script>
     <script src="{{ base_path }}/assets/js/redesign.js"></script>
 
   </body>

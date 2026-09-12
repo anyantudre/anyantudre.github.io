@@ -87,7 +87,11 @@ layout: redesign-default
     keep clear of the bare `.toc` card the legacy pages still use.
   {%- endcomment %}
   <div class="tocwrap" hidden>
-  <nav class="toc" aria-label="On this page">
+  {%- comment -%} The landmark's name was the English literal "On this page",
+     two lines above a rubric that already reads t.on_this_page — so on a
+     French post the visible heading was French and the name a screen reader
+     announced for the same box was English. One catalogue, one string. {%- endcomment %}
+  <nav class="toc" aria-label="{{ t.on_this_page }}">
   <p class="rubric">{{ t.on_this_page }}</p>
   <ol></ol>
   </nav>
