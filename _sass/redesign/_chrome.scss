@@ -59,17 +59,42 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 .lang .br,.lang .sl{color:var(--muted)}
 .lang .sl{padding:0 .1em}
 .lang a{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:.07em;text-underline-offset:.2em}
+// The language switch is the most consequential control in a bilingual site's
+// chrome, and it was the one link family on the page that gave the pointer no
+// answer at all: it inherits a:hover{color:var(--accent)} from _base.scss,
+// which is a no-op on text that is already oxblood. The site had already
+// decided what an accent-coloured link does on hover — .res a inverts to ink —
+// so this adopts that rule rather than inventing a second behaviour. The
+// current language is still told apart by aria-current and its [ ] brackets.
+.lang a:hover{color:var(--text);text-decoration-color:var(--text)}
 
 // INTEGRATION — the switch and the theme control travel together as the nav's
-// last flex child, so the bar keeps the six children the design balanced. The
-// control itself is the site's existing one, markup and ids untouched:
-// assets/js/_main.js binds #theme-toggle and swaps the class on #theme-icon,
-// and its data-theme + localStorage mechanism is exactly what :root[data-theme]
-// above expects. Only the dress is new, and it is the nav's own.
+// last flex child, so the bar keeps the six children the design balanced.
+// assets/js/_main.js still binds #theme-toggle, and its data-theme +
+// localStorage mechanism is exactly what :root[data-theme] above expects.
+//
+// The element is a <button> so it is keyboard-operable (it was a hrefless <a>
+// inside a span, reachable by mouse only). Everything a button brings with it
+// — the UA background, border, padding, font and centring — is taken back off
+// here, so the control still renders exactly as it did.
+//
+// align-self:center rather than the flex parent's baseline: a button's
+// baseline is its text content's, and this one has no text. Centring it
+// against the [EN]/[FR] cap height is what the eye was reading before.
 .navtail{display:flex;align-items:baseline;gap:var(--s2);white-space:nowrap}
-.tgl{font-size:var(--t-label);line-height:1;color:var(--muted);cursor:pointer;transition:color 150ms ease}
-.tgl a{color:inherit;text-decoration:none;cursor:pointer}
-.tgl:hover,.tgl:focus-within{color:var(--accent)}
+.tgl{appearance:none;-webkit-appearance:none;background:none;border:0;padding:0;margin:0;font:inherit;font-size:var(--t-label);line-height:1;color:var(--muted);cursor:pointer;transition:color 150ms ease;display:inline-flex;align-items:center;align-self:center}
+.tgl svg{width:15px;height:15px;display:block;color:inherit;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+// Which of the two glyphs shows is decided by the attribute the boot script
+// has already stamped, not by a script that runs after the first paint. Light
+// is the UNSTAMPED state, so the sun is the default and the dark rule is the
+// only override — the same asymmetry setTheme() uses.
+.tgl-moon{display:none}
+:root[data-theme="dark"] .tgl-sun{display:none}
+:root[data-theme="dark"] .tgl-moon{display:block}
+.tgl:hover{color:var(--accent)}
+// A 15px icon with a 2px ring at 3px offset sits tight against the FR link, so
+// the offset is pulled in by a pixel; the ring is still unmistakable.
+.tgl:focus-visible{color:var(--accent);outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
 // === 16. FOOTER — a loss surface; each iterate of the descent links up ===
 .foot{margin-top:var(--s12)}
@@ -81,7 +106,11 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 .contours .trail-l{fill:none;stroke:var(--accent);stroke-width:1.1;opacity:var(--trail-o);stroke-linejoin:round;stroke-linecap:round}
 .fmin{position:absolute;left:25%;top:71.33%;transform:translate(-100%,-50%);padding-right:1rem;max-width:16rem;text-align:right}
 .fmin::before{content:"";position:absolute;right:0;top:50%;transform:translate(50%,-50%);width:9px;height:9px;border-radius:50%;background:var(--accent)}
-.fmin a{font-family:var(--serif);font-size:1.1rem;font-style:italic;text-decoration:none;display:block;line-height:1.2}
+// 1.16rem to match .pname. This link and the portrait's .pname are the SAME
+// object — the site owner's name, serif italic — and they were rendered
+// 0.06rem apart, which is visible when you scroll from the top of the home
+// page to the bottom of it.
+.fmin a{font-family:var(--serif);font-size:1.16rem;font-style:italic;text-decoration:none;display:block;line-height:1.2}
 .fmin a:hover{color:var(--accent)}
 .fmin span{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-top:2px}
 .fv{position:absolute;width:0;height:0;transform:translate(-50%,-50%);text-decoration:none}
@@ -91,12 +120,29 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 .fv--dn .l{top:10px}
 .fv:hover .l,.fv:focus-visible .l{color:var(--accent)}
 .fv:hover .d,.fv:focus-visible .d{background:var(--accent);border-color:var(--accent)}
+// THE FOCUS RING, ON SOMETHING THE READER CAN SEE.
+//
+// .fv is a 0x0 box placed at a point on the loss surface; its dot and its
+// label are absolutely positioned around that point. The global
+// :focus-visible{outline} in _base.scss therefore drew a ~6x6px square at the
+// collapsed origin, not around the waypoint — so seven links, which are the
+// footer's entire navigation, had no usable focus indicator. What feedback
+// there was (the label turning oxblood) is also the hover state, so keyboard
+// position was indistinguishable from a mouse passing by.
+//
+// The outline moves to the label, which has width, height and a padding box
+// already. The colour change stays on top of it.
+.fv:focus-visible{outline:none}
+.fv:focus-visible .l{outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 // ROUND 6 — the formula and its citation are one right-aligned pair: the
 // update rule on its own line, hard against the right edge, and the
 // tensor-shape citation DIRECTLY below it in the bracket form .attrib uses
 // everywhere else on the site — same face, size, colour and brackets.
 .flegend{margin:0 0 var(--s4)}
-.flegend .eq{display:block;text-align:right;font-family:var(--math);font-size:1.06rem;line-height:1.4;color:var(--text);margin:0}
+// 1.08rem, not 1.06: this and .colo-m in _post.scss are the same role — a
+// display-maths line set in --math — and shipped 0.02rem apart in two files,
+// a step no reader can perceive. One value for one role.
+.flegend .eq{display:block;text-align:right;font-family:var(--math);font-size:1.08rem;line-height:1.4;color:var(--text);margin:0}
 .flegend .attrib{text-align:right;margin:.15rem 0 0}
 // name at the left, social glyphs at the right
 .foot-band{padding-top:var(--s2);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--s2) var(--s4)}

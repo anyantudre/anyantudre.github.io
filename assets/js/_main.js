@@ -22,7 +22,15 @@ let determineComputedTheme = () => {
 // detect OS/browser preference
 const browserPref = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
-// Set the theme on page load or when explicitly called
+// Set the theme on page load or when explicitly called.
+//
+// The #theme-icon class swap below belongs to the LEGACY masthead
+// (_includes/masthead.html), which still draws its control as a Font Awesome
+// <i>. The redesign's control no longer has a #theme-icon at all: it ships
+// both sprite glyphs and lets CSS choose between them from the data-theme
+// attribute this function sets, so the right icon is painted by the boot
+// script before the first frame instead of being corrected by a deferred
+// module. On a redesigned page the two lines simply match nothing.
 let setTheme = (theme) => {
   const use_theme =
     theme ||

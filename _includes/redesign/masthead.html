@@ -9,10 +9,12 @@
      nav-home / nav-work / nav-blog / nav-talks / nav-cv class the stylesheet
      matches against <html data-view="…">.
 
-     The dark-mode control is the site's EXISTING one — #theme-toggle and
-     #theme-icon, bound in assets/js/_main.js, storing data-theme in
-     localStorage, which is precisely what :root[data-theme="dark"] wants. Only
-     its wrapper changed, from a masthead <li> to the nav's own trailing span. -->
+     The dark-mode control keeps the site's EXISTING mechanism — #theme-toggle,
+     bound in assets/js/_main.js, storing data-theme in localStorage, which is
+     precisely what :root[data-theme="dark"] wants. What changed is the element
+     (a real <button>, because the old hrefless <a> could not be reached from a
+     keyboard) and the icon (the site's own sprite instead of Font Awesome).
+     See the comment on the control itself, below. -->
 
 {%- assign lang = page.lang | default: 'en' -%}
 {%- assign t = site.data.t[lang] -%}
@@ -84,55 +86,45 @@
   {%- comment -%}
     [ EN ] / [ FR ].  ROUND 6, § 1.
 
-    The rule is DERIVED FROM THE PERMALINK, never typed, so it cannot drift as
-    pages are added: the French counterpart of /x/ is /fr/x/ and the English
-    counterpart of /fr/x/ is /x/. `site.pages | where: 'url'` then asks whether
-    that page actually exists in this build — so a route with no counterpart
-    can never produce a 404.
-
-    Three cases, in order of authority:
-
-      1. translation_en / translation_fr in front matter WINS. Blog posts are
-         written twice rather than translated once and already carry the pair;
-         that mechanism is untouched, this rule simply defers to it.
-      2. A counterpart page exists at the mirrored permalink — link to it.
-      3. Nothing mirrors this page (a project, an award, a milestone, a legacy
-         route). The link then goes to the French INDEX for the section the
-         reader is in, read from page.view, which is exactly where a reader who
-         asked for French wants to land. Never a dead link, never inert text.
-
-    `lang_home` is the last resort for a page with no view at all.
+    The rule that decides where this points is DERIVED FROM THE PERMALINK,
+    never typed, and it now lives in _includes/redesign/lang-pair.html — the
+    <head> needs the same answer for its hreflang alternates, and a routing
+    rule kept in two places is a routing rule that eventually 404s. The logic
+    is unchanged; read that file for the three cases and their order of
+    authority. It hands back `lp_other_url`, which always resolves.
   {%- endcomment -%}
-  {%- case page.view -%}
-    {%- when 'work' -%}{%- assign lang_home = '/fr/projects/' -%}
-    {%- when 'blog' -%}{%- assign lang_home = '/fr/blog/' -%}
-    {%- when 'post' -%}{%- assign lang_home = '/fr/blog/' -%}
-    {%- when 'talks' -%}{%- assign lang_home = '/fr/teaching-talks/' -%}
-    {%- when 'cv' -%}{%- assign lang_home = '/fr/cv/' -%}
-    {%- else -%}{%- assign lang_home = '/fr/' -%}
-  {%- endcase -%}
-  {%- if lang == 'fr' -%}
-    {%- assign other_url = page.translation_en -%}
-    {%- unless other_url -%}
-      {%- assign mirror = page.url | remove_first: '/fr' -%}
-      {%- if mirror == '' -%}{%- assign mirror = '/' -%}{%- endif -%}
-      {%- assign mirror_page = site.pages | where: 'url', mirror | first -%}
-      {%- if mirror_page -%}{%- assign other_url = mirror -%}{%- else -%}{%- assign other_url = '/' -%}{%- endif -%}
-    {%- endunless -%}
-  {%- else -%}
-    {%- assign other_url = page.translation_fr -%}
-    {%- unless other_url -%}
-      {%- assign mirror = page.url | prepend: '/fr' | replace: '//', '/' -%}
-      {%- assign mirror_page = site.pages | where: 'url', mirror | first -%}
-      {%- if mirror_page -%}{%- assign other_url = mirror -%}{%- else -%}{%- assign other_url = lang_home -%}{%- endif -%}
-    {%- endunless -%}
-  {%- endif %}
+  {%- include redesign/lang-pair.html -%}
+  {%- assign other_url = lp_other_url -%}
   {%- if lang == 'fr' %}
   <span class="lang"><span class="gs"><a href="{{ other_url | relative_url }}" hreflang="en" lang="en">EN</a></span> <span class="sl">/</span> <span class="gs"><span class="cur" aria-current="true">FR</span></span></span>
   {%- else %}
   <span class="lang"><span class="gs"><span class="cur" aria-current="true">EN</span></span> <span class="sl">/</span> <span class="gs"><a href="{{ other_url | relative_url }}" hreflang="fr" lang="fr">FR</a></span></span>
   {%- endif %}
-  <span id="theme-toggle" class="tgl"><a role="button" aria-labelledby="theme-icon"><i id="theme-icon" class="fa-solid fa-sun" aria-hidden="true" title="{{ t.toggle_theme }}"></i></a></span>
+  {%- comment -%}
+    THE DARK-MODE CONTROL. It was
+      <span id="theme-toggle"><a role="button" …><i id="theme-icon" …></i></a></span>
+    — an <a> with no href and no tabindex, so it was not in the tab order, and
+    the only handler was a click binding on the parent <span>. There was no way
+    to change the theme with a keyboard on any of the 83 pages: a WCAG 2.1.1
+    Level A failure on the most-used control in the chrome, and it defeated the
+    no-flash boot script for exactly the readers most likely to be keyboard
+    users. role="button" on an element that can never take focus is a promise
+    to assistive technology that nothing kept.
+
+    It is a real <button> now. Enter and Space fire its click for free, it is
+    focusable by definition, and its accessible name is its own aria-label
+    rather than a chain through aria-labelledby into an aria-hidden <i> whose
+    only text was a title attribute.
+
+    #theme-toggle is unchanged, so the click binding in assets/js/_main.js
+    still finds it. #theme-icon is gone, and so is the JavaScript that used to
+    swap a class on it: the control ships BOTH sprite glyphs and CSS chooses
+    between them from the data-theme attribute. That attribute is stamped by
+    the boot script before the first paint, so a dark-theme reader now gets the
+    moon in the first frame instead of a sun that a deferred module corrects a
+    moment later.
+  {%- endcomment %}
+  <button id="theme-toggle" type="button" class="tgl" aria-label="{{ t.toggle_theme }}" title="{{ t.toggle_theme }}"><svg class="tgl-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#ic-sun"/></svg><svg class="tgl-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#ic-moon"/></svg></button>
   </span>
   </nav>
   </div>
