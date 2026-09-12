@@ -181,3 +181,8 @@
 .chart .lb{font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
 figure{margin:var(--s4) 0 var(--s6);clear:right}
 figcaption{font-size:var(--t-note);line-height:1.45;color:var(--muted)}
+
+/* The caption's closing sentence follows the same 640px line as the list:
+   above it the output units are the way in, below it the list is. */
+.mlpcap-narrow{display:none}
+@media (max-width:639px){.mlpcap-wide{display:none}.mlpcap-narrow{display:inline}}

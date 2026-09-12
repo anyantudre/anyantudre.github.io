@@ -165,5 +165,14 @@
  {%- endfor -%}
  </ul>
 
- <p class="mlpcap">{{ t.mlp_cap }}</p>
+ {%- comment -%}
+   The closing sentence depends on the width. Above 640px the seven output
+   units ARE the way in, so "follow an output unit" is true. Below it they are
+   visibility:hidden and the list underneath does the navigating, so the same
+   sentence would be telling a phone reader to tap something that is not there.
+ {%- endcomment -%}
+ <p class="mlpcap">{{ t.mlp_cap }}
+  <span class="mlpcap-wide">{{ t.mlp_cap_follow }}</span>
+  <span class="mlpcap-narrow">{{ t.mlp_cap_list }}</span>
+ </p>
 </nav>

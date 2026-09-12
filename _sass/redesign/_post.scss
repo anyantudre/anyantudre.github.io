@@ -215,6 +215,19 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
   .postgrid{grid-template-columns:var(--side) minmax(0,var(--wide));column-gap:var(--sidegap)}
   .postside{position:sticky;top:calc(var(--navh) + var(--s2));align-self:start;margin-bottom:0}
 }
+// THE WIDER RAIL ONLY WHERE THE PROSE CAN AFFORD IT.
+//
+// .col is min(--prose, 100% - --noteoff), so wherever the VIEWPORT is the
+// binding term rather than the token, every rem added to --rail comes straight
+// out of the reading measure. Measured on the built page at a 1185px viewport:
+// --rail 16rem gave 552px of prose (60 characters, exactly the floor) and
+// --rail 18rem gave 516px (56 characters, under it). From roughly 1265px up the
+// measure is token-bound at 635px / 69 characters and the rail is free.
+//
+// So his wider rail applies from 1280px, and the 1120-1279px band - a very
+// common laptop width - keeps the 16rem that holds it at 60.
+@media (min-width:1120px) and (max-width:1279px){:root{--rail:16rem}}
+
 // the rail narrows first
 @media (max-width:1119px){:root{--pad-left:2.5rem;--rail:13.5rem;--gap:2rem;--portrait:172px;--cell:1.4rem;--navw:27rem}
   .nav{column-gap:var(--s2)}
