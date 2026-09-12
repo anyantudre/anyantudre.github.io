@@ -109,6 +109,10 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 .copy:active{background:var(--accent-soft)}
 .copy[data-copied]{color:var(--accent);border-color:var(--accent)}
 .copy[hidden]{display:none}
+// and the same clearance for a hand-written listing that never went through
+// Rouge — /markdown/ carries bare <pre> inside .legacy, and redesign.js wraps
+// every <pre> in a prose scope, so those get a copy button too
+.codeblock > pre:not(.highlight){padding-top:var(--s6)}
 
 // the in-article figures, all capped to the measure
 .dia{width:100%;max-width:22rem;height:auto;display:block;margin:0 auto;color:var(--text)}
@@ -333,14 +337,28 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 [data-prose] div.highlighter-rouge, .legacy div.highlighter-rouge{padding:0;border:0;border-radius:0;background:none;box-shadow:none;font-size:inherit;margin:0 0 var(--s4)}
 [data-prose] div.highlighter-rouge::before, .legacy div.highlighter-rouge::before{content:none}
 [data-prose] div.highlighter-rouge .highlight, .legacy div.highlighter-rouge .highlight{margin:0;font-family:var(--mono);font-size:inherit;line-height:inherit;background:none;border:0}
-[data-prose] pre.highlight, .legacy pre.highlight{padding:var(--s3);margin:0;overflow-x:auto}
+// THE COPY BUTTON'S CLEARANCE. .copy sits at top:var(--s1) (9px) and is
+// 27.2px tall — .34rem of padding either side of a 12.96px line box plus a
+// 1px border — so it ends 36.2px down. The first code line used to start at
+// var(--s3) (27px), which puts its glyphs at roughly y = 31 to 42, and the
+// button's OPAQUE background:var(--surface) therefore covered the top of
+// that line wherever it ran to the right-hand edge. Silent, because it only
+// shows on a long first line, which is why it survived.
+//
+// var(--s6) (54px) clears the button by 18px. Both Rouge cells move together
+// below — the gutter must keep the SAME top padding as the code cell or the
+// numeral 1 stops sitting beside line one — and the cost is stated plainly:
+// 27px more air above every listing on the site.
+[data-prose] pre.highlight, .legacy pre.highlight{padding:var(--s6) var(--s3) var(--s3);margin:0;overflow-x:auto}
 [data-prose] pre.highlight > code, .legacy pre.highlight > code{display:block;font-size:1em}
 // with the line-number table present the frame's padding belongs to the
 // cells, not to the box, or the gutter rule cannot reach the frame's edges
 [data-prose] pre.highlight#{":has(.rouge-table)"}, .legacy pre.highlight#{":has(.rouge-table)"}{padding:0;overflow:visible}
 [data-prose] .rouge-table, .legacy .rouge-table{width:100%;border-collapse:collapse;margin:0;table-layout:fixed}
 [data-prose] .rouge-table td, .legacy .rouge-table td{padding:0;border:0;vertical-align:top}
-[data-prose] .rouge-table pre, .legacy .rouge-table pre{background:none;border:0;border-radius:0;margin:0;padding:var(--s3) 0;font-size:1em;line-height:inherit;overflow:visible}
+// the same clearance, on BOTH cells, so the line numbers stay level with the
+// code they number
+[data-prose] .rouge-table pre, .legacy .rouge-table pre{background:none;border:0;border-radius:0;margin:0;padding:var(--s6) 0 var(--s3);font-size:1em;line-height:inherit;overflow:visible}
 [data-prose] td.rouge-gutter, .legacy td.rouge-gutter{width:2.9rem;border-right:1px solid var(--border);text-align:right;user-select:none;-webkit-user-select:none}
 [data-prose] td.rouge-gutter pre, .legacy td.rouge-gutter pre{padding-left:var(--s2);padding-right:var(--s2);color:var(--faint)}
 [data-prose] td.rouge-code pre, .legacy td.rouge-code pre{padding-left:var(--s3);padding-right:var(--s3);overflow-x:auto}
