@@ -86,14 +86,18 @@
   <link rel="next" href="{{ paginator.next_page_path | prepend: seo_url }}">
 {% endif %}
 
+{% comment %}`site.social` is present in _config.yml with every child left blank,
+so this block fired and shipped literal nulls: "url" : null, "sameAs" : null. A
+null is not a missing key — a consumer reads it as "this person has no site and
+no profiles". Each key is now emitted only when it has a value.{% endcomment %}
 {% if site.social %}
   <script type="application/ld+json">
     {
       "@context" : "http://schema.org",
       "@type" : "{% if site.social.type %}{{ site.social.type }}{% else %}Person{% endif %}",
-      "name" : "{{ site.social.name | default: site.name }}",
-      "url" : {{ seo_url | jsonify }},
-      "sameAs" : {{ site.social.links | jsonify }}
+      "name" : {{ site.social.name | default: site.name | jsonify }}{% if seo_url %},
+      "url" : {{ seo_url | jsonify }}{% endif %}{% if site.social.links %},
+      "sameAs" : {{ site.social.links | jsonify }}{% endif %}
     }
   </script>
 {% endif %}
@@ -113,7 +117,10 @@
 <!-- end SEO -->
 
 <!-- Open Graph protocol data (https://ogp.me/), used by social media -->
-<meta property="og:locale" content="{{ site.locale | default: "en" }}">
+{% comment %}og:locale is the PAGE's language, not the site's. This was
+hardcoded to site.locale, so every mirrored /fr/ page announced itself as
+en-US.{% endcomment %}
+<meta property="og:locale" content="{% if page.lang == 'fr' %}fr_FR{% else %}{{ site.locale | default: "en" | replace: "-", "_" }}{% endif %}">
 <meta property="og:site_name" content="{{ site.title }}"> 
 <meta property="og:title" content="{{ page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once }}">
 {% if page.date %}

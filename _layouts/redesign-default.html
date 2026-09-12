@@ -114,9 +114,12 @@
       a module and is therefore deferred by definition — so `Plotly` is defined
       by the time the hook looks for it, exactly as when it was concatenated
       ahead of it in the bundle.
+
+      assets/js/lib, not assets/js/vendor — _config.yml excludes the latter
+      from the build, so a file put there is never published.
     {%- endcomment -%}
     {%- if content contains 'language-plotly' %}
-    <script src="{{ base_path }}/assets/js/vendor/plotly.min.js"></script>
+    <script src="{{ base_path }}/assets/js/lib/plotly.min.js"></script>
     {%- endif %}
     {% include scripts.html %}
     <script src="{{ base_path }}/assets/js/redesign.js"></script>
