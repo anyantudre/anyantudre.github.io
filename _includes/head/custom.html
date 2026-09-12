@@ -2,14 +2,89 @@
 
 <!-- start custom head snippets -->
 
-<!-- Support for Academicons -->
-<link rel="stylesheet" href="{{ base_path }}/assets/css/academicons.css"/>
+{%- comment -%}
+  ACADEMICONS IS GONE. It was a second render-blocking stylesheet (9,778 bytes)
+  on every page, and a grep for `class="ai ai-` across all 83 built pages
+  returns zero hits. Nothing on this site has ever used it.
+{%- endcomment -%}
 
-<!-- Favicon: profile photo -->
-<link rel="apple-touch-icon" sizes="180x180" href="{{ base_path }}/images/profile.jpg"/>
-<link rel="icon" type="image/png" href="{{ base_path }}/images/profile.jpg" sizes="32x32"/>
-<link rel="icon" type="image/png" href="{{ base_path }}/images/profile.jpg" sizes="192x192"/>
-<link rel="icon" href="{{ base_path }}/images/profile.jpg"/>
-<meta name="theme-color" content="#1a1a2e"/>
+{%- comment -%}
+  THE FAVICON. Every one of the four links used to point at
+  /images/profile.jpg — a 77,596-byte portrait photograph downloaded as a 32px
+  tab icon on every page — and two of them declared type="image/png" for a
+  JPEG. The correctly sized assets were already in the repo, referenced by
+  nothing: favicon.svg (492 B), favicon.ico, and the 180/192/512 PNGs.
+{%- endcomment -%}
+<link rel="icon" href="{{ base_path }}/images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="{{ base_path }}/images/favicon.ico" sizes="any">
+<link rel="icon" href="{{ base_path }}/images/favicon-32x32.png" type="image/png" sizes="32x32">
+<link rel="icon" href="{{ base_path }}/images/favicon-192x192.png" type="image/png" sizes="192x192">
+<link rel="apple-touch-icon" sizes="180x180" href="{{ base_path }}/images/apple-touch-icon-180x180.png">
+
+{%- comment -%}
+  THEME-COLOUR. It was #1a1a2e — a navy from the design before this one, so
+  Android Chrome and iOS Safari painted the browser chrome navy above a
+  warm-ivory page: the one place on a phone where the site contradicted its own
+  colour decision. These are the two grounds the token file actually defines.
+
+  Media-scoped theme-color follows the OS preference rather than the site's own
+  toggle, so a reader who has forced dark on a light OS still gets a light
+  chrome bar. That is a browser limitation — there is no way to drive this from
+  data-theme — and it is strictly better than a colour from neither theme.
+{%- endcomment -%}
+<meta name="theme-color" content="#FFFFF8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#151515" media="(prefers-color-scheme: dark)">
+
+{%- comment -%}
+  THE SHARE CARD. This portfolio's job is to be opened from a link in an email
+  to a prospective supervisor, or from LinkedIn, or from Slack. It was
+  unfurling as a bare word with no image and no sentence: _includes/seo.html
+  guards its whole Twitter/OG image block on site.twitter.username and on
+  site.og_image, both of which are blank in _config.yml, and it never emits
+  og:image at all for a page without a header image.
+
+  So the card is completed here rather than by filling in those config keys —
+  setting site.og_image would also switch on seo.html's second JSON-LD block,
+  which declares an "Organization" with a "logo", and this is a person.
+
+  The image is the 848x848 portrait, paired with `summary` rather than
+  `summary_large_image`. images/linkedin_banner_V2.png is the other candidate,
+  but it is 1584x396: a 4:1 banner dropped into a 1.91:1 card slot gets
+  centre-cropped, and a clean square thumbnail beside the title and the
+  sentence reads better than a guillotined banner. A purpose-made 1200x630
+  card would beat both; that is a design asset to make, not a tag to write.
+{%- endcomment -%}
+{%- assign share_desc = page.description | default: page.excerpt | default: site.description | markdownify | strip_html | normalize_whitespace | strip | truncate: 200 -%}
+{%- unless page.header.image or page.header.overlay_image %}
+<meta property="og:image" content="{{ '/images/profile.jpg' | absolute_url }}">
+{%- endunless %}
+<meta property="og:image:alt" content="{{ site.author.name | escape_once }}">
+{%- unless page.excerpt or site.og_description %}
+<meta property="og:description" content="{{ share_desc | escape_once }}">
+{%- endunless %}
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ page.title | default: site.title | markdownify | strip_html | strip_newlines | escape_once }}">
+<meta name="twitter:description" content="{{ share_desc | escape_once }}">
+<meta name="twitter:image" content="{{ '/images/profile.jpg' | absolute_url }}">
+
+{%- assign pg_lang = page.lang | default: 'en' -%}
+{%- comment -%}
+  HREFLANG. Mirrored slugs, a translated string catalogue, localised dates and
+  a language control that resolves on every route — and none of it was visible
+  to a search engine, because the head never declared the pair.
+
+  lang-pair.html is the same include the navbar's [EN]/[FR] control uses, so
+  the alternate can never point somewhere the control does not. `lp_exact` is
+  false when the counterpart is the section-index fallback rather than a real
+  translation, and nothing is emitted in that case: telling a crawler that a
+  project page and the French projects index are the same document would be a
+  lie that costs both of them.
+{%- endcomment -%}
+{%- include redesign/lang-pair.html -%}
+{%- if lp_exact %}
+<link rel="alternate" hreflang="{{ pg_lang }}" href="{{ page.url | absolute_url }}">
+<link rel="alternate" hreflang="{{ lp_other }}" href="{{ lp_other_url | absolute_url }}">
+<link rel="alternate" hreflang="x-default" href="{% if pg_lang == 'en' %}{{ page.url | absolute_url }}{% else %}{{ lp_other_url | absolute_url }}{% endif %}">
+{%- endif %}
 
 <!-- end custom head snippets -->

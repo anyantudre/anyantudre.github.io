@@ -1,0 +1,70 @@
+{%- comment -%}
+  THE LANGUAGE PAIR, DERIVED FROM THE PERMALINK.
+
+  This is the rule that was written once inside _includes/redesign/masthead.html
+  for the [ EN ] / [ FR ] control. The <head> now needs the same answer, for the
+  <link rel="alternate" hreflang> pair, so it is factored out here rather than
+  copied — two copies of a routing rule drift, and this one decides whether a
+  link 404s.
+
+  The logic is unchanged, verbatim, in the same order of authority:
+
+    1. translation_en / translation_fr in front matter WINS. Blog posts are
+       written twice rather than translated once and already carry the pair.
+    2. A counterpart page exists at the mirrored permalink — the French
+       counterpart of /x/ is /fr/x/ and the English counterpart of /fr/x/ is
+       /x/ — so `site.pages | where: 'url'` asks whether this build really
+       contains it. A route with no counterpart can never produce a 404.
+    3. Nothing mirrors this page (a project, an award, a milestone, a legacy
+       route). The link goes to the French INDEX for the section the reader is
+       in, read from page.view. Never a dead link, never inert text.
+
+  It sets four variables in the caller's scope:
+
+    lp_lang       this page's language, 'en' or 'fr'
+    lp_other      the other language's code
+    lp_other_url  where the control should point — always resolvable
+    lp_exact      true only for cases 1 and 2.
+
+  lp_exact is the piece the navbar never needed. A case-3 fallback is a
+  sensible place to send a reader who asked for French; it is NOT a translation
+  of this page, and declaring it as an hreflang alternate would tell a search
+  engine that a project page and the French projects index are the same
+  document. The head emits alternates only when lp_exact is true.
+{%- endcomment -%}
+{%- assign lp_lang = page.lang | default: 'en' -%}
+{%- case page.view -%}
+  {%- when 'work' -%}{%- assign lp_home = '/fr/projects/' -%}
+  {%- when 'blog' -%}{%- assign lp_home = '/fr/blog/' -%}
+  {%- when 'post' -%}{%- assign lp_home = '/fr/blog/' -%}
+  {%- when 'talks' -%}{%- assign lp_home = '/fr/teaching-talks/' -%}
+  {%- when 'cv' -%}{%- assign lp_home = '/fr/cv/' -%}
+  {%- else -%}{%- assign lp_home = '/fr/' -%}
+{%- endcase -%}
+{%- assign lp_exact = true -%}
+{%- if lp_lang == 'fr' -%}
+  {%- assign lp_other = 'en' -%}
+  {%- assign lp_other_url = page.translation_en -%}
+  {%- unless lp_other_url -%}
+    {%- assign lp_mirror = page.url | remove_first: '/fr' -%}
+    {%- if lp_mirror == '' -%}{%- assign lp_mirror = '/' -%}{%- endif -%}
+    {%- assign lp_mirror_page = site.pages | where: 'url', lp_mirror | first -%}
+    {%- if lp_mirror_page -%}
+      {%- assign lp_other_url = lp_mirror -%}
+    {%- else -%}
+      {%- assign lp_other_url = '/' -%}{%- assign lp_exact = false -%}
+    {%- endif -%}
+  {%- endunless -%}
+{%- else -%}
+  {%- assign lp_other = 'fr' -%}
+  {%- assign lp_other_url = page.translation_fr -%}
+  {%- unless lp_other_url -%}
+    {%- assign lp_mirror = page.url | prepend: '/fr' | replace: '//', '/' -%}
+    {%- assign lp_mirror_page = site.pages | where: 'url', lp_mirror | first -%}
+    {%- if lp_mirror_page -%}
+      {%- assign lp_other_url = lp_mirror -%}
+    {%- else -%}
+      {%- assign lp_other_url = lp_home -%}{%- assign lp_exact = false -%}
+    {%- endif -%}
+  {%- endunless -%}
+{%- endif -%}
