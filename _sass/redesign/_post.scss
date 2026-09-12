@@ -10,19 +10,51 @@
 //    a parallel system: every measure resolves on --prose and --rail.
 
 // prose furniture
+// THE LADDER INSIDE A POST BODY. It was 72 / 54 / 27 — h2 only 1.33x the air
+// above an h3, while an h3 got 2x the air above a paragraph. The
+// discrimination was in the wrong place: the gap that says "new major section"
+// was barely louder than the one that says "new subsection". Compare the home
+// page, which gets it right — h2 takes --s12 (108px) against .entry's --s4
+// (36px) and the trail's --s6 (54px), a clean 3:1 and 2:1.
+//
+// 72 / 36 / 27 now: h2 is 2x h3, and h3 is a clear step above a paragraph
+// break without pretending to be a section. No new token; s8, s4 and s3 are
+// all already in this file. The gain is largest at <=959px, where .flow h2
+// drops to --s6 (54px) and the two gaps were IDENTICAL before this change —
+// an outright failure of hierarchy on a phone, which now reads 54 / 36.
 .flow h2{margin-top:var(--s8)}
-.flow h3{margin:var(--s6) 0 var(--s2)}
+.flow h3{margin:var(--s4) 0 var(--s2)}
 .flow ul,.flow ol{padding-left:1.2em;margin:0 0 var(--s3);clear:right}
 .flow li{margin-bottom:var(--s1)}
-.flow li::marker{color:var(--faint)}
+// _tokens.scss states the rule: --faint is 2.39:1, so it is "rules and markers
+// ONLY, never read text". A BULLET is a marker — it says "this is an item" and
+// nothing more, and a reader who cannot resolve it loses nothing. A NUMERAL is
+// read text: in a tutorial, "step 3" is how the prose refers back to it. So the
+// two part company here, and the ordered list takes --muted (6.69:1 light,
+// 6.61:1 dark).
+.flow ul li::marker{color:var(--faint)}
+.flow ol li::marker{color:var(--muted)}
 code{font-family:var(--mono);font-size:.82em;font-style:normal}
 // .8rem = 14.4px, a step under --t-note: the listing's longest line
 // (61 characters) then clears the 36rem measure without scrolling
-pre{font-family:var(--mono);font-size:.8rem;line-height:1.62;background:var(--surface);border:1px solid var(--border);padding:var(--s3);overflow-x:auto;tab-size:4;-moz-tab-size:4;margin:0 0 var(--s4);clear:right}
+// border-radius:2px — the site runs ONE radius system for framed boxes and
+// this was one of the two outside it. The portrait, the blog index thumb, the
+// project lead image, the legacy figure images and teasers, the legacy buttons
+// and the .copy control are all 2px on a 1px --border hairline; the listing and
+// the legacy iframe were square. On a page with exactly one radius value a
+// second value reads as an oversight, not as variety — and the 2px-cornered
+// copy button sat INSIDE the square box, which is the version of the error you
+// can see without measuring anything, on every post and project page that
+// carries a listing. (The 50% on the circular markers is a different thing: a
+// point, not a frame.)
+pre{font-family:var(--mono);font-size:.8rem;line-height:1.62;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:var(--s3);overflow-x:auto;tab-size:4;-moz-tab-size:4;margin:0 0 var(--s4);clear:right}
 pre code{font-size:1em}
 blockquote{margin:var(--s4) 0;padding-left:var(--s3);border-left:2px solid var(--accent);font-style:italic;line-height:1.5;clear:right}
 blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-size:var(--t-label);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:var(--s1)}
-.byline{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.02em;color:var(--muted);line-height:1.95;margin:0 0 var(--s4)}
+// 1.9, joining .res and .cloud — the other wrapping bracketed runs. 1.95
+// against 1.9 is a distinction no reader can perceive, so it was one more
+// line-height for a future component to have to choose between.
+.byline{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.02em;color:var(--muted);line-height:1.9;margin:0 0 var(--s4)}
 .sidenote .num{font-family:var(--sans);font-size:.78em;font-weight:600;color:var(--accent);vertical-align:super;line-height:0;margin-right:.35em}
 .wrow .meta{display:block;margin-bottom:2px}
 
@@ -93,8 +125,19 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 .codeblock pre{clear:none}
 .copy{position:absolute;top:var(--s1);right:var(--s1);z-index:1;font-family:var(--mono);font-size:var(--t-label);line-height:1;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:.34rem .52rem;cursor:pointer;transition:color 150ms ease,border-color 150ms ease}
 .copy:hover{color:var(--accent);border-color:var(--accent)}
+// A pressed state in the page's own vocabulary: COLOUR ONLY. The site's whole
+// argument is stillness, so nothing here scales or lifts under the cursor —
+// the ground shifts to --accent-soft for the duration of the press, which says
+// "pressed" without moving type. --accent-soft is themed, so it works in both,
+// and accent on it computes 6.06:1 light / 4.93:1 dark.
+.copy:active{background:var(--accent-soft)}
 .copy[data-copied]{color:var(--accent);border-color:var(--accent)}
 .copy[hidden]{display:none}
+// and the same clearance the Rouge listings get below (see the note there) for
+// a hand-written listing that never went through Rouge — /markdown/ carries
+// bare <pre> inside .legacy, and redesign.js wraps every <pre> in a prose
+// scope, so those get a copy button too
+.codeblock > pre:not(.highlight){padding-top:var(--s6)}
 
 // the in-article figures, all capped to the measure
 .dia{width:100%;max-width:22rem;height:auto;display:block;margin:0 auto;color:var(--text)}
@@ -174,12 +217,30 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 @media (max-width:1119px){:root{--pad-left:2.5rem;--rail:13.5rem;--gap:2rem;--portrait:172px;--cell:1.4rem;--navw:27rem}
   .nav{column-gap:var(--s2)}
 }
-// --navh must never UNDER-state the stacked bar. Measured at 480–959px:
-// 36 pad-top + 43 brand + 18 row-gap + 53 two-line nav + 18 + 16 rule + 9
-// + 9 pad-bottom + 1 border ≈ 203px. 10.5rem (189px) left the anchor jump
-// clearing the bar by 4px — inside the error bar of a font metric. 11.5rem
-// (207px) plus the --s2 in scroll-margin-top clears it by 22px.
-@media (max-width:959px){:root{--pad-left:1.5rem;--t-body:1.055rem;--setback:0rem;--field-h:auto;--navh:11.5rem}
+// THE BAR STOPS BEING STICKY ON A PHONE.
+//
+// The measurement that used to live in this comment is the argument against
+// the thing it was measuring. Stacked, the bar is 36 pad-top + 43 brand + 18
+// row-gap + 53 two-line nav + 18 + 16 rule + 9 + 9 pad-bottom + 1 border, so
+// --navh had to be 11.5rem (207px) at 480–959px and 12rem (216px) below that.
+// Fixed to the top of a 375x667 phone, that is 31% of the viewport, for the
+// whole visit, and it is the reason the hero MLP — the instrument the home
+// page is built around — sits well below the first screen on a phone. On a
+// 1400px desktop the same bar costs 8% of the height and earns its keep; at
+// 375px it does not. Below 960px it becomes an ordinary page header, scrolled
+// past once, and the screen belongs to the work.
+//
+// --navh then no longer describes a bar that is in the way; it is only the
+// breathing room an in-page jump leaves above its target, so 1rem plus the
+// --s2 already in scroll-margin-top. It is NOT 0: assets/js/redesign.js reads
+// this custom property to build the observer's rootMargin and falls back to
+// 6.6 on a falsy value, so a literal zero would restore a 119px offset.
+//
+// Three consumers, all of which want the smaller number here: the
+// scroll-margin-top in _base.scss, the .tocwrap/.postside sticky tops above
+// (both already static or desktop-only at this width), and that rootMargin.
+@media (max-width:959px){:root{--pad-left:1.5rem;--t-body:1.055rem;--setback:0rem;--field-h:auto;--navh:1rem}
+  .mast{position:static}
   .sheet{width:auto;margin:0;padding-left:var(--pad-left);padding-right:var(--pad-left)}
   // one column, one right edge — and a cap, or the measure runs past 100
   // characters between 700 and 959px where the rail has gone but the
@@ -196,6 +257,28 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
   .nav{justify-content:flex-start;column-gap:var(--s3)}
   // notes fall into the flow
   .marginnote,.sidenote{float:none;width:auto;max-width:100%;margin:var(--s2) 0 var(--s3);padding-left:var(--s2);border-left:2px solid var(--border)}
+  // THE HOME PAGE'S FIRST SCREEN ON A PHONE.
+  //
+  // .marginnote.profile is emitted BEFORE the <h1> because at >=960px it
+  // floats into the right rail. Below 960px the float goes away and it lands
+  // in the flow at its source position, so the first screenful read: portrait,
+  // "Alban Nyantudre", role, location, four social links, and only then the
+  // <h1> saying "Alban Nyantudre" again — the same name twice inside about
+  // 400px, with the four social links as the first focusable things inside
+  // <main>, ahead of the page's own heading.
+  //
+  // The hero column becomes a flex column here and ONLY here, so the profile
+  // can be ordered after the heading, the lede and the MLP. The >=960px
+  // layout is untouched: the float, the --noteoff negative margin and the
+  // set-back rule all still see the ordinary block flow they were written for.
+  // Nothing else on the page becomes a flex container.
+  //
+  // .pname goes with it. Two elements later the <h1> says exactly those words
+  // at display size; in the rail, where there is no heading beside it, it is
+  // still the name and it stays.
+  .col--hero{display:flex;flex-direction:column}
+  .col--hero .marginnote.profile{order:1;margin:var(--s6) 0 0}
+  .col--hero .pname{display:none}
   .profile{border-left:0;padding-left:0;display:grid;grid-template-columns:var(--portrait) minmax(0,1fr);gap:var(--s3);align-items:start}
   .profile .pt{margin-bottom:0}
   .profile .socials{grid-column:#{"1 / -1"}}
@@ -237,7 +320,9 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
   .hmcols span{font-size:.56rem}
   .hmrows{font-size:.56rem}
 }
-@media (max-width:479px){:root{--pad-left:1.25rem;--t-body:1rem;--cell:1.15rem;--navh:12rem}
+// --navh is inherited from the 959px block above (the bar is static from here
+// down, so its height is no longer an anchor offset).
+@media (max-width:479px){:root{--pad-left:1.25rem;--t-body:1rem;--cell:1.15rem}
   .mlp{max-width:100%}
   .minimlp{height:1.9rem}
 }
@@ -296,14 +381,49 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 [data-prose] div.highlighter-rouge, .legacy div.highlighter-rouge{padding:0;border:0;border-radius:0;background:none;box-shadow:none;font-size:inherit;margin:0 0 var(--s4)}
 [data-prose] div.highlighter-rouge::before, .legacy div.highlighter-rouge::before{content:none}
 [data-prose] div.highlighter-rouge .highlight, .legacy div.highlighter-rouge .highlight{margin:0;font-family:var(--mono);font-size:inherit;line-height:inherit;background:none;border:0}
-[data-prose] pre.highlight, .legacy pre.highlight{padding:var(--s3);margin:0;overflow-x:auto}
+// THE COPY BUTTON'S CLEARANCE. .copy sits at top:var(--s1) (9px) and is
+// 27.2px tall — .34rem of padding either side of a 12.96px line box plus a 1px
+// border — so it ends 36.2px down. The first code line used to start at
+// var(--s3) (27px), which puts its glyphs at roughly y = 31 to 42, and the
+// button's OPAQUE background:var(--surface) therefore covered the top of that
+// line wherever it ran to the right-hand edge. Silent, because it only shows on
+// a long first line, which is why it survived — and the worst kind of silent,
+// because a reader who sees a clipped line cannot tell whether the code is
+// wrong or the chrome is.
+//
+// var(--s6) (54px) clears the button by 18px. Both Rouge cells move together
+// below — the gutter must keep the SAME top padding as the code cell or the
+// numeral 1 stops sitting beside line one — and the cost is stated plainly:
+// 27px more air above every listing on the site. --s4 would have cleared the
+// glyphs by about 4px, which is inside the error bar of a font metric; this
+// file has been bitten by that size of margin before (see --navh).
+[data-prose] pre.highlight, .legacy pre.highlight{padding:var(--s6) var(--s3) var(--s3);margin:0;overflow-x:auto}
 [data-prose] pre.highlight > code, .legacy pre.highlight > code{display:block;font-size:1em}
 // with the line-number table present the frame's padding belongs to the
 // cells, not to the box, or the gutter rule cannot reach the frame's edges
 [data-prose] pre.highlight#{":has(.rouge-table)"}, .legacy pre.highlight#{":has(.rouge-table)"}{padding:0;overflow:visible}
 [data-prose] .rouge-table, .legacy .rouge-table{width:100%;border-collapse:collapse;margin:0;table-layout:fixed}
 [data-prose] .rouge-table td, .legacy .rouge-table td{padding:0;border:0;vertical-align:top}
-[data-prose] .rouge-table pre, .legacy .rouge-table pre{background:none;border:0;border-radius:0;margin:0;padding:var(--s3) 0;font-size:1em;line-height:inherit;overflow:visible}
+// the same clearance, on BOTH cells, so the line numbers stay level with the
+// code they number
+[data-prose] .rouge-table pre, .legacy .rouge-table pre{background:none;border:0;border-radius:0;margin:0;padding:var(--s6) 0 var(--s3);font-size:1em;line-height:inherit;overflow:visible}
 [data-prose] td.rouge-gutter, .legacy td.rouge-gutter{width:2.9rem;border-right:1px solid var(--border);text-align:right;user-select:none;-webkit-user-select:none}
-[data-prose] td.rouge-gutter pre, .legacy td.rouge-gutter pre{padding-left:var(--s2);padding-right:var(--s2);color:var(--faint)}
+// The numerals were --faint, and the block comment above justified it as
+// "markers, never read text". That was the wrong classification. Rouge runs
+// with line_numbers on, so every listing in every post and every project page
+// carries this column, and "line 14" is exactly how a tutorial refers to its
+// own code — it IS read text, at 2.39:1 in light and 3.16:1 in dark, the only
+// text on the site that failed 4.5:1.
+//
+// The colour is --muted — 6.69:1 on the light ground, 6.61:1 on the dark —
+// which is the site's own secondary-text tier and already carries every other
+// piece of metadata. Against code set in --text at 18.8:1 that is a clear step
+// down, so the gutter still reads as subordinate; it just reads.
+//
+// An `opacity` on top was tried, to take back some of the weight the designer
+// had chosen. It does not survive the arithmetic: opacity composites toward
+// the page, and .78 of --muted lands on 3.95:1. Anything low enough to be
+// visible as a softening is low enough to fail, so there is no version of that
+// idea worth having.
+[data-prose] td.rouge-gutter pre, .legacy td.rouge-gutter pre{padding-left:var(--s2);padding-right:var(--s2);color:var(--muted)}
 [data-prose] td.rouge-code pre, .legacy td.rouge-code pre{padding-left:var(--s3);padding-right:var(--s3);overflow-x:auto}
