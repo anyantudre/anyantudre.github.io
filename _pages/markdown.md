@@ -3,6 +3,9 @@ layout: redesign-legacy
 permalink: /markdown/
 title: "Markdown"
 author_profile: true
+# This demo page shows LaTeX alongside Mermaid and Plotly. MathJax is now
+# loaded only where `math: true` is declared, so the flag has to be here.
+math: true
 redirect_from: 
   - /md/
   - /markdown.html

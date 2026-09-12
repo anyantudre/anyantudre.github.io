@@ -307,6 +307,18 @@
 <aside class="col vmap">
  <p class="rubric">{{ t.map_rubric }}</p>
  <div class="visitors-map">
-  <script type="text/javascript" id="mapmyvisitors" src="//mapmyvisitors.com/map.js?d=fcPVyWoP2WbbJvz9GDQRP0i4pizFz-OPfy4uC9NQiMk&cl=ffffff&w=a"></script>
+  {%- comment -%} The src was protocol-relative (`//mapmyvisitors.com/...`), a
+     pattern from the era of mixed http/https hosting; on an https site it
+     already resolved to https, and pinning it makes that explicit and stops it
+     resolving to http when the page is opened from a file:// preview.
+
+     It is deliberately still a SYNCHRONOUS script. `defer` or `async` would be
+     the obvious win — it is a third-party request in the middle of the
+     document and the footer cannot parse until it returns — but badge widgets
+     of this vintage commonly insert themselves with document.write, which both
+     attributes silently turn into a no-op. Verifying that needs the live
+     script, so the attribute is not being added on a guess: losing the map
+     would be a worse regression than the round trip costs. {%- endcomment -%}
+  <script type="text/javascript" id="mapmyvisitors" src="https://mapmyvisitors.com/map.js?d=fcPVyWoP2WbbJvz9GDQRP0i4pizFz-OPfy4uC9NQiMk&cl=ffffff&w=a"></script>
  </div>
 </aside>

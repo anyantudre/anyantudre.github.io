@@ -1,8 +1,31 @@
 <!-- MathJax and Mermaid, factored out of footer/custom.html so that the
      redesign shell can load exactly this and nothing else. The legacy
      footer/custom.html now includes this file, so both shells share one
-     configuration. Posts set `math: true`; the ResNet post depends on it. -->
+     configuration.
 
+     EACH ENGINE IS NOW GATED ON THE PAGE ACTUALLY NEEDING IT.
+
+     Both used to load on all 83 pages: MathJax ~1.1 MB, Mermaid ~2.5 MB, on a
+     home page with no mathematics and no diagram. That is 3.6 MB of parser
+     work and four third-party round trips spent on nothing, on a site whose
+     own instruments are 5 KB of inline SVG precisely so that no charting
+     library is needed.
+
+       MathJax loads when the page declares `math: true` — the four review
+       posts and the Markdown demo page do, and the flag was already the
+       documented contract ("Posts set `math: true`"); it simply was not being
+       read. A page that writes $…$ without the flag gets no typesetting, which
+       is the same rule as before, now enforced.
+
+       Mermaid loads when the rendered body actually contains a
+       ```mermaid fence — kramdown emits it as <code class="language-mermaid">,
+       so the test is on the built output, not on a flag an author must
+       remember. Exactly one page on the site has one.
+
+     `content` is the rendered child output, available because this include is
+     called from a layout. -->
+
+{%- if page.math %}
 <!-- Support for MathJax -->
 <script>
 MathJax = {
@@ -27,10 +50,13 @@ MathJax = {
 </script>
 <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" id="MathJax-script"></script>
+{%- endif %}
 
+{%- if content contains 'language-mermaid' %}
 <!-- Support for Mermaid -->
 <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
     mermaid.initialize({startOnLoad:true, theme:'default'});
     await mermaid.run({querySelector:'code.language-mermaid'});
 </script>
+{%- endif %}

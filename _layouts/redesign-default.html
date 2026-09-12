@@ -63,13 +63,20 @@
       })();
     </script>
 
+    <!-- The two preconnects sit ABOVE head.html deliberately. head.html carries
+         main.css, and a <link rel=preconnect> discovered after it is queued
+         behind it — the DNS, TCP and TLS cost of fonts.gstatic.com is then
+         paid in series with the stylesheet instead of alongside it. Moving two
+         lines up the file buys one round trip on the render-blocking path and
+         changes nothing else. -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     {% include head.html %}
     {% include head/custom.html %}
 
     <!-- EB Garamond for the reading face and the mathematics, Karla for the
          labels, metadata and the nav. Both are non-negotiable in the design. -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400&family=Karla:wght@400;600&display=swap">
   </head>
 
@@ -94,6 +101,23 @@
     </div>
 
     {% include footer/mathjax.html %}
+    {%- comment -%}
+      PLOTLY, ON THE ONE PAGE THAT HAS A CHART.
+
+      It used to be linked into assets/js/main.min.js, where it was 3.5 MB of a
+      4.6 MB bundle downloaded by all 83 pages — for a single Academic Pages
+      demo page. The hook in assets/js/_main.js was already gated on
+      `pre>code.language-plotly` being present, so nothing but the bytes was
+      ever spent elsewhere; only the bytes are removed here.
+
+      A classic <script> (not deferred) runs before main.min.js, which ships as
+      a module and is therefore deferred by definition — so `Plotly` is defined
+      by the time the hook looks for it, exactly as when it was concatenated
+      ahead of it in the bundle.
+    {%- endcomment -%}
+    {%- if content contains 'language-plotly' %}
+    <script src="{{ base_path }}/assets/js/vendor/plotly.min.js"></script>
+    {%- endif %}
     {% include scripts.html %}
     <script src="{{ base_path }}/assets/js/redesign.js"></script>
 
