@@ -9,10 +9,12 @@
      nav-home / nav-work / nav-blog / nav-talks / nav-cv class the stylesheet
      matches against <html data-view="…">.
 
-     The dark-mode control is the site's EXISTING one — #theme-toggle and
-     #theme-icon, bound in assets/js/_main.js, storing data-theme in
-     localStorage, which is precisely what :root[data-theme="dark"] wants. Only
-     its wrapper changed, from a masthead <li> to the nav's own trailing span. -->
+     The dark-mode control keeps the site's EXISTING mechanism — #theme-toggle,
+     bound in assets/js/_main.js, storing data-theme in localStorage, which is
+     precisely what :root[data-theme="dark"] wants. What changed is the element
+     (a real <button>, because the old hrefless <a> could not be reached from a
+     keyboard) and the icon (the site's own sprite instead of Font Awesome).
+     See the comment on the control itself, below. -->
 
 {%- assign lang = page.lang | default: 'en' -%}
 {%- assign t = site.data.t[lang] -%}
@@ -98,7 +100,31 @@
   {%- else %}
   <span class="lang"><span class="gs"><span class="cur" aria-current="true">EN</span></span> <span class="sl">/</span> <span class="gs"><a href="{{ other_url | relative_url }}" hreflang="fr" lang="fr">FR</a></span></span>
   {%- endif %}
-  <span id="theme-toggle" class="tgl"><a role="button" aria-labelledby="theme-icon"><i id="theme-icon" class="fa-solid fa-sun" aria-hidden="true" title="{{ t.toggle_theme }}"></i></a></span>
+  {%- comment -%}
+    THE DARK-MODE CONTROL. It was
+      <span id="theme-toggle"><a role="button" …><i id="theme-icon" …></i></a></span>
+    — an <a> with no href and no tabindex, so it was not in the tab order, and
+    the only handler was a click binding on the parent <span>. There was no way
+    to change the theme with a keyboard on any of the 83 pages: a WCAG 2.1.1
+    Level A failure on the most-used control in the chrome, and it defeated the
+    no-flash boot script for exactly the readers most likely to be keyboard
+    users. role="button" on an element that can never take focus is a promise
+    to assistive technology that nothing kept.
+
+    It is a real <button> now. Enter and Space fire its click for free, it is
+    focusable by definition, and its accessible name is its own aria-label
+    rather than a chain through aria-labelledby into an aria-hidden <i> whose
+    only text was a title attribute.
+
+    #theme-toggle is unchanged, so the click binding in assets/js/_main.js
+    still finds it. #theme-icon is gone, and so is the JavaScript that used to
+    swap a class on it: the control ships BOTH sprite glyphs and CSS chooses
+    between them from the data-theme attribute. That attribute is stamped by
+    the boot script before the first paint, so a dark-theme reader now gets the
+    moon in the first frame instead of a sun that a deferred module corrects a
+    moment later.
+  {%- endcomment %}
+  <button id="theme-toggle" type="button" class="tgl" aria-label="{{ t.toggle_theme }}" title="{{ t.toggle_theme }}"><svg class="tgl-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#ic-sun"/></svg><svg class="tgl-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#ic-moon"/></svg></button>
   </span>
   </nav>
   </div>

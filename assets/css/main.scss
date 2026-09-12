@@ -37,9 +37,13 @@
     "layout/sidebar",
     "layout/json_cv",
 
-    "vendor/font-awesome/fontawesome",
-    "vendor/font-awesome/solid",
-    "vendor/font-awesome/brands",
+    // ONE FILE IN PLACE OF fontawesome + solid + brands. Same core, same two
+    // @font-face rules; the two `@each` loops over the complete icon maps are
+    // replaced by an explicit list of the ~60 glyphs this site's templates can
+    // emit. That table was 88 KB raw and 23 KB gzipped — half of the
+    // render-blocking CSS — for about three per cent of its contents.
+    // ADDING AN ICON TO A TEMPLATE MEANS ADDING ITS NAME IN THAT FILE.
+    "vendor/font-awesome/fontawesome-subset",
 
     "layout/syntax-dark",
     "layout/blog",

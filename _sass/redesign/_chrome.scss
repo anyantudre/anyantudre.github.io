@@ -61,15 +61,32 @@ html[data-view="talks"] .nav-talks{color:var(--text);border-bottom-color:var(--a
 .lang a{color:var(--accent);text-decoration-color:var(--accent);text-decoration-thickness:.07em;text-underline-offset:.2em}
 
 // INTEGRATION — the switch and the theme control travel together as the nav's
-// last flex child, so the bar keeps the six children the design balanced. The
-// control itself is the site's existing one, markup and ids untouched:
-// assets/js/_main.js binds #theme-toggle and swaps the class on #theme-icon,
-// and its data-theme + localStorage mechanism is exactly what :root[data-theme]
-// above expects. Only the dress is new, and it is the nav's own.
+// last flex child, so the bar keeps the six children the design balanced.
+// assets/js/_main.js still binds #theme-toggle, and its data-theme +
+// localStorage mechanism is exactly what :root[data-theme] above expects.
+//
+// The element is a <button> so it is keyboard-operable (it was a hrefless <a>
+// inside a span, reachable by mouse only). Everything a button brings with it
+// — the UA background, border, padding, font and centring — is taken back off
+// here, so the control still renders exactly as it did.
+//
+// align-self:center rather than the flex parent's baseline: a button's
+// baseline is its text content's, and this one has no text. Centring it
+// against the [EN]/[FR] cap height is what the eye was reading before.
 .navtail{display:flex;align-items:baseline;gap:var(--s2);white-space:nowrap}
-.tgl{font-size:var(--t-label);line-height:1;color:var(--muted);cursor:pointer;transition:color 150ms ease}
-.tgl a{color:inherit;text-decoration:none;cursor:pointer}
-.tgl:hover,.tgl:focus-within{color:var(--accent)}
+.tgl{appearance:none;-webkit-appearance:none;background:none;border:0;padding:0;margin:0;font:inherit;font-size:var(--t-label);line-height:1;color:var(--muted);cursor:pointer;transition:color 150ms ease;display:inline-flex;align-items:center;align-self:center}
+.tgl svg{width:15px;height:15px;display:block;color:inherit;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+// Which of the two glyphs shows is decided by the attribute the boot script
+// has already stamped, not by a script that runs after the first paint. Light
+// is the UNSTAMPED state, so the sun is the default and the dark rule is the
+// only override — the same asymmetry setTheme() uses.
+.tgl-moon{display:none}
+:root[data-theme="dark"] .tgl-sun{display:none}
+:root[data-theme="dark"] .tgl-moon{display:block}
+.tgl:hover{color:var(--accent)}
+// A 15px icon with a 2px ring at 3px offset sits tight against the FR link, so
+// the offset is pulled in by a pixel; the ring is still unmistakable.
+.tgl:focus-visible{color:var(--accent);outline:2px solid var(--accent);outline-offset:2px;border-radius:2px}
 
 // === 16. FOOTER — a loss surface; each iterate of the descent links up ===
 .foot{margin-top:var(--s12)}

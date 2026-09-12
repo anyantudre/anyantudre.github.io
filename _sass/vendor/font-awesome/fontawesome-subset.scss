@@ -1,0 +1,116 @@
+// FONT AWESOME, SUBSET — written for this site, not shipped by Fonticons.
+//
+// WHY. assets/css/main.css is 229,221 bytes raw / 47,367 gzipped, and it is
+// render-blocking on every page. The `.fa-*::before` glyph table alone is
+// 88,137 bytes raw and, measured by gzipping the file with and without it,
+// 23,071 bytes gzipped — 49% of what blocks first paint on a portfolio whose
+// entire argument is restraint. Font Awesome ships roughly two thousand icon
+// rules. This site can reach about seventy of them.
+//
+// WHAT IT REPLACES. `vendor/font-awesome/fontawesome` + `solid` + `brands` in
+// assets/css/main.scss. Everything those pulled in is still here — the core
+// classes, sizing, fixed-width, list, bordered/pulled, animated, rotated,
+// stacked, screen-reader, and both @font-face declarations — EXCEPT the two
+// `@each` loops over the complete icon maps, which are replaced by the two
+// lists below.
+//
+// HOW THE LISTS WERE BUILT. Not from the rendered site — that would subset to
+// what happens to be switched on in _config.yml today, and an icon would
+// vanish the moment a blank config key was filled in. They are a grep for
+// every `fa-…` token across _includes, _layouts, _pages, _data and every
+// content collection, which is every icon any template can emit under any
+// configuration.
+//
+//   >>> ADDING AN ICON TO A TEMPLATE MEANS ADDING ITS NAME HERE. <<<
+//
+// A name that is not in the map is reported by @warn at build time rather than
+// failing the build or, worse, rendering an empty box — so a typo is visible
+// in the build log.
+//
+// The webfont files themselves are NOT subsetted; that needs a font toolchain
+// and a licence read. It matters much less than it sounds, because the
+// redesigned pages no longer emit a single `fa-` glyph — the theme control was
+// the last one, and it is now two <symbol>s in the site's own sprite — so
+// fa-solid-900.woff2 (156 KB) is not requested on home, work, blog, post, cv
+// or teaching at all. Only the kept Academic Pages routes still pull it.
+
+@import 'functions';
+@import 'variables';
+@import 'mixins';
+@import 'core';
+@import 'sizing';
+@import 'fixed-width';
+@import 'list';
+@import 'bordered-pulled';
+@import 'animated';   // fa-spin is used by _includes/comments.html
+@import 'rotated-flipped';
+@import 'stacked';
+@import 'screen-reader';
+
+:root, :host {
+  --#{$fa-css-prefix}-style-family-classic: '#{ $fa-style-family }';
+  --#{$fa-css-prefix}-font-solid: normal 900 1em/1 '#{ $fa-style-family }';
+  --#{$fa-css-prefix}-style-family-brands: 'Font Awesome 6 Brands';
+  --#{$fa-css-prefix}-font-brands: normal 400 1em/1 'Font Awesome 6 Brands';
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Free';
+  font-style: normal;
+  font-weight: 900;
+  font-display: $fa-font-display;
+  src: url('#{$fa-font-path}/fa-solid-900.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-solid-900.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Font Awesome 6 Brands';
+  font-style: normal;
+  font-weight: 400;
+  font-display: $fa-font-display;
+  src: url('#{$fa-font-path}/fa-brands-400.woff2') format('woff2'),
+    url('#{$fa-font-path}/fa-brands-400.ttf') format('truetype');
+}
+
+.fas,
+.#{$fa-css-prefix}-solid {
+  font-weight: 900;
+}
+
+.fab,
+.#{$fa-css-prefix}-brands {
+  font-weight: 400;
+}
+
+// Solid and regular glyphs this site's templates can emit.
+$fa-site-icons:
+  book, brain, building, building-columns, calendar, chess, clock, code,
+  envelope, file-text, folder-open, futbol, globe, id-badge, key, lightbulb,
+  link, location-dot, map-marker, map-marker-alt, microphone, moon, phone,
+  play-circle, podcast, rss-square, spinner, sun, tags, trophy;
+
+// Brand glyphs. Most of these are the optional profile links in
+// _includes/author-profile.html, gated on _config.yml keys that are currently
+// blank — which is exactly why they are kept.
+$fa-site-brand-icons:
+  artstation, bitbucket, bluesky, codepen, dribbble, facebook, facebook-f,
+  flickr, foursquare, github, goodreads, google-plus-g, instagram, kaggle,
+  lastfm, linkedin, mastodon, medium, pinterest, researchgate, soundcloud,
+  stack-overflow, steam, telegram, tumblr, vine, weibo, wikipedia-w,
+  x-twitter, xing, youtube, zhihu;
+
+@each $name in $fa-site-icons {
+  @if map-has-key($fa-icons, '#{$name}') {
+    .#{$fa-css-prefix}-#{$name}::before { content: unquote("\"#{ map-get($fa-icons, '#{$name}') }\""); }
+  } @else {
+    @warn "fontawesome-subset: no solid/regular icon named '#{$name}'";
+  }
+}
+
+@each $name in $fa-site-brand-icons {
+  @if map-has-key($fa-brand-icons, '#{$name}') {
+    .#{$fa-css-prefix}-#{$name}::before { content: unquote("\"#{ map-get($fa-brand-icons, '#{$name}') }\""); }
+  } @else {
+    @warn "fontawesome-subset: no brand icon named '#{$name}'";
+  }
+}
