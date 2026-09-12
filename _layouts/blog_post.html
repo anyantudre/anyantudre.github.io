@@ -63,7 +63,7 @@ layout: redesign-default
 
 <div class="postgrid">
 
- <aside class="postside">
+ <aside class="postside" aria-label="{{ t.aria_post_details }}">
  {%- if cat %}
   <p><span class="ps-l">{{ t.filed_under }}</span><span class="ps-t">{{ cat_label }}</span><a href="{{ '/blog/categories/' | relative_url }}#{{ cat | slugify }}">{{ t.everything_in_cat }}</a></p>
  {%- endif %}

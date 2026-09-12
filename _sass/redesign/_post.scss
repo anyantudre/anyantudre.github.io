@@ -181,12 +181,30 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 @media (max-width:1119px){:root{--pad-left:2.5rem;--rail:13.5rem;--gap:2rem;--portrait:172px;--cell:1.4rem;--navw:27rem}
   .nav{column-gap:var(--s2)}
 }
-// --navh must never UNDER-state the stacked bar. Measured at 480–959px:
-// 36 pad-top + 43 brand + 18 row-gap + 53 two-line nav + 18 + 16 rule + 9
-// + 9 pad-bottom + 1 border ≈ 203px. 10.5rem (189px) left the anchor jump
-// clearing the bar by 4px — inside the error bar of a font metric. 11.5rem
-// (207px) plus the --s2 in scroll-margin-top clears it by 22px.
-@media (max-width:959px){:root{--pad-left:1.5rem;--t-body:1.055rem;--setback:0rem;--field-h:auto;--navh:11.5rem}
+// THE BAR STOPS BEING STICKY ON A PHONE.
+//
+// The measurement that used to live in this comment is the argument against
+// the thing it was measuring. Stacked, the bar is 36 pad-top + 43 brand + 18
+// row-gap + 53 two-line nav + 18 + 16 rule + 9 + 9 pad-bottom + 1 border, so
+// --navh had to be 11.5rem (207px) at 480–959px and 12rem (216px) below that.
+// Fixed to the top of a 375x667 phone, that is 31% of the viewport, for the
+// whole visit, and it is the reason the hero MLP — the instrument the home
+// page is built around — sits well below the first screen on a phone. On a
+// 1400px desktop the same bar costs 8% of the height and earns its keep; at
+// 375px it does not. Below 960px it becomes an ordinary page header, scrolled
+// past once, and the screen belongs to the work.
+//
+// --navh then no longer describes a bar that is in the way; it is only the
+// breathing room an in-page jump leaves above its target, so 1rem plus the
+// --s2 already in scroll-margin-top. It is NOT 0: assets/js/redesign.js reads
+// this custom property to build the observer's rootMargin and falls back to
+// 6.6 on a falsy value, so a literal zero would restore a 119px offset.
+//
+// Three consumers, all of which want the smaller number here: the
+// scroll-margin-top in _base.scss, the .tocwrap/.postside sticky tops above
+// (both already static or desktop-only at this width), and that rootMargin.
+@media (max-width:959px){:root{--pad-left:1.5rem;--t-body:1.055rem;--setback:0rem;--field-h:auto;--navh:1rem}
+  .mast{position:static}
   .sheet{width:auto;margin:0;padding-left:var(--pad-left);padding-right:var(--pad-left)}
   // one column, one right edge — and a cap, or the measure runs past 100
   // characters between 700 and 959px where the rail has gone but the
@@ -203,6 +221,28 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
   .nav{justify-content:flex-start;column-gap:var(--s3)}
   // notes fall into the flow
   .marginnote,.sidenote{float:none;width:auto;max-width:100%;margin:var(--s2) 0 var(--s3);padding-left:var(--s2);border-left:2px solid var(--border)}
+  // THE HOME PAGE'S FIRST SCREEN ON A PHONE.
+  //
+  // .marginnote.profile is emitted BEFORE the <h1> because at >=960px it
+  // floats into the right rail. Below 960px the float goes away and it lands
+  // in the flow at its source position, so the first screenful read: portrait,
+  // "Alban Nyantudre", role, location, four social links, and only then the
+  // <h1> saying "Alban Nyantudre" again — the same name twice inside about
+  // 400px, with the four social links as the first focusable things inside
+  // <main>, ahead of the page's own heading.
+  //
+  // The hero column becomes a flex column here and ONLY here, so the profile
+  // can be ordered after the heading, the lede and the MLP. The >=960px
+  // layout is untouched: the float, the --noteoff negative margin and the
+  // set-back rule all still see the ordinary block flow they were written for.
+  // Nothing else on the page becomes a flex container.
+  //
+  // .pname goes with it. Two elements later the <h1> says exactly those words
+  // at display size; in the rail, where there is no heading beside it, it is
+  // still the name and it stays.
+  .col--hero{display:flex;flex-direction:column}
+  .col--hero .marginnote.profile{order:1;margin:var(--s6) 0 0}
+  .col--hero .pname{display:none}
   .profile{border-left:0;padding-left:0;display:grid;grid-template-columns:var(--portrait) minmax(0,1fr);gap:var(--s3);align-items:start}
   .profile .pt{margin-bottom:0}
   .profile .socials{grid-column:#{"1 / -1"}}
@@ -244,7 +284,9 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
   .hmcols span{font-size:.56rem}
   .hmrows{font-size:.56rem}
 }
-@media (max-width:479px){:root{--pad-left:1.25rem;--t-body:1rem;--cell:1.15rem;--navh:12rem}
+// --navh is inherited from the 959px block above (the bar is static from here
+// down, so its height is no longer an anchor offset).
+@media (max-width:479px){:root{--pad-left:1.25rem;--t-body:1rem;--cell:1.15rem}
   .mlp{max-width:100%}
   .minimlp{height:1.9rem}
 }

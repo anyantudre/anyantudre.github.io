@@ -85,6 +85,9 @@ en:
     scroll_region: "Scrollable region"
   # The footer's mail link is an icon only, so its aria-label is its whole name.
   aria_email: "Email %s"
+  # The post's metadata rail is an <aside>, i.e. a complementary landmark
+  # whether or not it is named. Unnamed, it announced only "complementary".
+  aria_post_details: "About this post"
   nav:
     home: "About"
     work: "Work"
@@ -311,6 +314,7 @@ fr:
     copied_aria: "Code copié dans le presse-papiers"
     scroll_region: "Zone défilable"
   aria_email: "Envoyer un e-mail à %s"
+  aria_post_details: "À propos de cet article"
   nav:
     home: "À propos"
     work: "Travaux"

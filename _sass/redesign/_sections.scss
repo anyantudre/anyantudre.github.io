@@ -140,24 +140,11 @@
 .np-in:nth-of-type(5):checked ~ .np-track > .np-page:nth-child(5),
 .np-in:nth-of-type(6):checked ~ .np-track > .np-page:nth-child(6){display:block}
 
-// THE PAGER'S FOCUS RING, DRAWN ON THE DOT THE READER IS LOOKING AT.
-//
-// The radios have to precede .np-track for `:checked ~` to reach it, and they
-// are clipped to 1px rather than display:none so they stay operable. The
-// consequence was that keyboard focus landed on a 1px box above the rows,
-// while the affordance — the oxblood dot — sits below them, unmarked. A
-// keyboard reader could page the section without ever seeing where they were.
-//
-// The general sibling combinator reaches from the radio, past .np-track, to
-// its own label in .np-dots, so the ring is drawn on the dot with nothing
-// moved in the DOM and no :has() dependency. Six pairs, matching the six
-// above; a seventh page needs a seventh pair in both places.
-.np-in:nth-of-type(1):focus-visible ~ .np-dots .np-dot:nth-child(1),
-.np-in:nth-of-type(2):focus-visible ~ .np-dots .np-dot:nth-child(2),
-.np-in:nth-of-type(3):focus-visible ~ .np-dots .np-dot:nth-child(3),
-.np-in:nth-of-type(4):focus-visible ~ .np-dots .np-dot:nth-child(4),
-.np-in:nth-of-type(5):focus-visible ~ .np-dots .np-dot:nth-child(5),
-.np-in:nth-of-type(6):focus-visible ~ .np-dots .np-dot:nth-child(6){outline:2px solid var(--accent);outline-offset:-2px;border-radius:50%}
+// (A focus ring for the pager was written here and then withdrawn. The audit
+// that asked for it reported that the clipped radios left the dots unmarked;
+// that is wrong — the rule further down, on .np-dot::before, already draws the
+// ring on the dot each radio labels, reached by the same sibling combinator.
+// Nothing to add. Left as a note so the claim is not re-investigated.)
 
 // the row
 .nrow{display:grid;grid-template-columns:8.5rem 1fr;column-gap:var(--s3);align-items:start;margin-bottom:var(--s3);text-decoration:none;color:inherit}

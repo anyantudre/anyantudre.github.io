@@ -1,4 +1,4 @@
-<!-- THE HOME PAGE — the `home` view of the approved design (final.html
+﻿<!-- THE HOME PAGE — the `home` view of the approved design (final.html
      L682-962), ported section for section and in the design's own order:
 
        hero (name · right profile column · the big MLP)
@@ -53,7 +53,27 @@
 {%- assign awards = site.awards | sort: 'date' | reverse -%}
 {%- assign wrinnn = site.portfolio | where_exp: "p", "p.title contains 'WrinnnAI'" | first -%}
 
-<article class="col">
+{%- comment -%}
+  <section>, NOT <article>. An <article> is defined as a self-contained
+  composition intended to be independently distributable — a blog post, a
+  comment, a product card. "About me" is not one, and neither are the six
+  blocks below it; what they were producing was seven anonymous role="article"
+  regions that a screen-reader rotor lists and that announce nothing useful.
+
+  Each of the six named sections below takes aria-labelledby pointing at the h2
+  id it already has, so the rotor reads exactly the seven-item index the hero
+  MLP's seven output units present visually. That is the accessible version of
+  this page's best idea, and it costs one attribute each.
+
+  This first one is deliberately UNNAMED: it holds the <h1>, so it is the
+  page's opening rather than a section of it, and an unnamed <section> is not
+  exposed as a landmark at all — which is the correct amount of furniture here.
+
+  No CSS changes: .col, .sb and the .rule grids are all class-keyed, and
+  <section> and <article> establish the same formatting context, so the
+  floated .marginnote clears exactly as before.
+{%- endcomment -%}
+<section class="col col--hero">
 
  <div class="marginnote profile">
   <img class="pt" src="{{ '/images/profile.jpg' | relative_url }}" alt="{{ site.author.name }}" width="200" height="250">
@@ -91,9 +111,9 @@
 
  {% include redesign/mlp-hero.html %}
 
-</article>
+</section>
 
-<article class="col">
+<section class="col" aria-labelledby="news">
 
  <h2 id="news">{{ t.h_news }}</h2>
  <div class="rule rule--sb rule--2" aria-hidden="true"><svg><use href="#sg0"/></svg><svg><use href="#sg3"/></svg><svg><use href="#sg5"/></svg></div>
@@ -101,9 +121,9 @@
  {% include redesign/news.html %}
  </div>
 
-</article>
+</section>
 
-<article class="col">
+<section class="col" aria-labelledby="about">
 
  <h2 id="about">{{ t.h_about }}</h2>
  <div class="rule" aria-hidden="true"><svg><use href="#sg4"/></svg></div>
@@ -133,9 +153,9 @@
  <p class="tail">Feel free to explore my <a href="{{ projects_url | relative_url }}">projects</a>, check out my <a href="{{ blog_url | relative_url }}">blog</a>, or <a href="mailto:{{ site.author.email }}">get in touch</a>.</p>
 {%- endif %}
 
-</article>
+</section>
 
-<article class="col">
+<section class="col" aria-labelledby="education experience">
 
  <h2 id="education">{{ t.h_education }}</h2>
  <div class="rule rule--2" aria-hidden="true"><svg><use href="#sg1"/></svg><svg><use href="#sg3"/></svg></div>
@@ -215,9 +235,9 @@
 {%- endif %}
  </ul>
 
-</article>
+</section>
 
-<article class="col">
+<section class="col" aria-labelledby="work">
 
  <h2 id="work">{{ t.h_work }}</h2>
  <div class="rule rule--2" aria-hidden="true"><svg><use href="#sg5"/></svg><svg><use href="#sg1"/></svg></div>
@@ -241,9 +261,9 @@
  {%- endcomment -%}
  <p class="tail"><a href="{{ projects_url | relative_url }}">{{ t.all_projects | replace: '%s', site.portfolio.size }}</a></p>
 
-</article>
+</section>
 
-<article class="col">
+<section class="col" aria-labelledby="awards">
 
  <h2 id="awards">{{ t.h_awards }}</h2>
  <div class="rule rule--sb rule--2" aria-hidden="true"><svg><use href="#sg0"/></svg><svg><use href="#sg2"/></svg><svg><use href="#sg6"/></svg></div>
@@ -260,9 +280,9 @@
  </ul>
  </div>
 
-</article>
+</section>
 
-<article class="col">
+<section class="col" aria-labelledby="posts">
 
  <h2 id="posts">{{ t.h_posts }}</h2>
  <div class="rule rule--sb rule--2" aria-hidden="true"><svg><use href="#sg0"/></svg><svg><use href="#sg5"/></svg><svg><use href="#sg2"/></svg></div>
@@ -298,14 +318,17 @@
  <p class="tail"><a href="{{ blog_url | relative_url }}">{{ t.all_posts }}</a></p>
  </div>
 
-</article>
+</section>
 
 <!-- THE VISITOR MAP — carried over from the old home page (the mapmyvisitors
      widget and its script, byte for byte). Restyled quiet by .vmap: no card,
      no fill, no radius — a rubric, a hairline, and the widget itself, sitting
      in the metadata type the rest of the page already speaks. -->
-<aside class="col vmap">
- <p class="rubric">{{ t.map_rubric }}</p>
+{%- comment -%} An <aside> is a complementary landmark whether it is named or
+   not, so an unnamed one is a rotor entry that says only "complementary". It
+   has a rubric two lines down; that is its name. {%- endcomment -%}
+<aside class="col vmap" aria-labelledby="vmap-rubric">
+ <p class="rubric" id="vmap-rubric">{{ t.map_rubric }}</p>
  <div class="visitors-map">
   {%- comment -%} The src was protocol-relative (`//mapmyvisitors.com/...`), a
      pattern from the era of mixed http/https hosting; on an https site it
