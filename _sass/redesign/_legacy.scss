@@ -114,7 +114,8 @@
 .legacy dd{margin:0 0 var(--s1)}
 
 .legacy hr{border:0;border-top:1px solid var(--border);margin:var(--s6) 0}
-.legacy iframe{max-width:100%;border:1px solid var(--border);background:var(--surface)}
+// the other square-cornered framed box on the site; 2px, like every other one
+.legacy iframe{max-width:100%;border:1px solid var(--border);border-radius:2px;background:var(--surface)}
 // the talk map and the slide embeds: a hairline frame that fills whatever
 // column it is given, never a fixed pixel width that can overhang a phone
 .mapframe,.legacy .pdf-viewer{width:100%;margin:0 0 var(--s4)}
