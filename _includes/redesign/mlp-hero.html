@@ -122,39 +122,46 @@
  </svg>
 
  {%- comment -%}
-   THE SAME SEVEN ANCHORS, AS A PLAIN LIST — phones only (≤639px in CSS).
+   THE SAME SEVEN SECTIONS, AS A REAL LIST OF LINKS — phones only (≤639px).
 
-   The figure is not decoration: the comment at the head of this file says its
-   job outright, "every output unit is a real anchor into the page below, so
-   the figure doubles as a table of contents". On a phone it could not do that
-   job. The viewBox is 662 user units wide and the column at 375px is 330 CSS
-   px, so the figure paints at a scale of 0.4985: .lab at font-size 12px lands
-   at 5.98px, and the <rect class="hit" height="22"> that is the entire click
-   and hover target lands at 10.97px — under half the 24 CSS px WCAG 2.5.8
-   asks of a pointer target, with seven of them stacked 13.96px apart.
+   "Keep the drawing, list below it." His decision, and the reason for it:
+   the viewBox is 662 user units wide and the column at 375px is 321 CSS px,
+   so the figure paints at a scale of 0.485. .lab at font-size 12px lands at
+   5.98px, and the <rect class="hit" height="22"> that is the entire click and
+   hover target lands at 10.97px — under half the 24 CSS px WCAG 2.5.8 asks of
+   a pointer target, with seven of them stacked 13.96px apart.
 
    No amount of CSS fixes that: to render 12px text legibly the figure needs
    roughly its own 662px, and a container that scrolled sideways would start
    the reader on the network with every section name off-screen to the right —
    a worse table of contents than one that does not fit.
 
-   So the figure stays exactly as it is — geometry, weights, hover wiring and
-   deterministic no-JS field all untouched — and the seven names are ALSO
-   emitted as a list from the SAME sect_id and sect_lab arrays, so the two can
-   never drift apart. The list is hidden above 639px and dressed in the site's
-   existing outline vocabulary (_sass/redesign/_devices.scss), the one the
-   post's .tocwrap already uses, so no new component and no new type step
-   enters the page.
+   SO, BELOW 640px ONLY, THE TWO JOBS SPLIT. The figure keeps the one it can
+   still do: it stays visible, and its nodes and edges keep lighting the
+   section in view exactly as they do on a desktop — geometry, weights,
+   scroll-spy and the deterministic no-JS field are all untouched, at every
+   width. What it stops doing is being the table of contents. The seven
+   <a class="out"> go visibility:hidden in _sass/redesign/_devices.scss, which
+   by CSS alone takes them out of the tab order AND out of the accessibility
+   tree — no 11px tap targets left tabbable behind a display:none — and
+   assets/js/redesign.js adds the two things CSS cannot say: aria-hidden on
+   the <svg>, and a viewBox cropped to where the drawing actually ends.
 
-   aria-hidden + tabindex="-1": the seven <a class="out"> above are real
-   anchors carrying real <title>s and remain the semantic table of contents at
-   every width. This list is a VISUAL restatement of them for small screens,
-   so it is kept out of the accessibility tree and out of the tab order rather
-   than reading the page's seven sections to a screen reader twice.
+   This list takes the job over. Real links, no aria-hidden and no negative
+   tabindex: at ≤639px it IS the page's table of contents, at full label size
+   and 44px tall, and above 639px it is display:none, so exactly one of the
+   two is ever in the accessibility tree.
+
+   IT IS GENERATED FROM THE SAME sect_id AND sect_lab ARRAYS as the figure, so
+   the order and the strings cannot drift — and because sect_lab is built from
+   site.data.t[lang], the French list reads in French. (It is page content, not
+   chrome: the navbar's English-on-French rule does not reach it.) The dress is
+   the site's own outline vocabulary, the one the post's .tocwrap already uses,
+   so no new component and no new type step enters the page.
  {%- endcomment -%}
- <ul class="mlplist" aria-hidden="true">
+ <ul class="mlplist">
  {%- for b in (0..6) -%}
- <li><a href="#{{ sect_id[b] }}" tabindex="-1">{{ sect_lab[b] }}</a></li>
+ <li><a href="#{{ sect_id[b] }}">{{ sect_lab[b] }}</a></li>
  {%- endfor -%}
  </ul>
 

@@ -129,30 +129,44 @@
 .mlp .out:focus-visible .hit{stroke:var(--accent);stroke-width:1.5}
 .mlpcap{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.02em;color:var(--muted);margin:var(--s2) 0 0}
 
-// THE FIGURE'S SEVEN NAMES, LEGIBLE AND TAPPABLE — phones only.
+// KEEP THE DRAWING, LIST BELOW IT — phones only (≤639px). His decision.
 //
-// At 375px the sheet gives this column 330 CSS px and the viewBox is 662 user
-// units, so the whole figure paints at a scale of 0.4985: .lab{font-size:12px}
+// At 375px the sheet gives this column 321 CSS px and the viewBox is 662 user
+// units, so the whole figure paints at a scale of 0.485: .lab{font-size:12px}
 // renders at 5.98px and .hit{height:22} renders at 10.97px. The figure is the
 // home page's table of contents, and on a phone its names were illegible and
 // its targets were under half the 24 CSS px WCAG 2.5.8 asks of a pointer
-// target, seven of them 13.96px apart. Nothing about the SVG is touched here —
-// the same seven hrefs are emitted as a list beside it and shown only where
-// the figure cannot carry them (_includes/redesign/mlp-hero.html).
+// target, seven of them 13.96px apart.
 //
 // 639px, not 479px: the figure is already under 10px of label at 639.
 //
-// The dress is the site's OWN outline vocabulary, copied from .tocwrap .toc in
-// _post.scss — Karla at --t-note, sentence case, a hairline left rule that
-// turns oxblood and thickens on hover. Sentence case on purpose: the home page
-// already carries 47 runs of uppercase Karla and seven more would be seven
-// more (see the .nwhen change). Two columns keep the block to four rows;
-// .34rem of vertical padding on a 20.8px line box gives a 33px target.
+// So below 640px the figure keeps the drawing and gives up the names. The
+// NODES AND EDGES ARE UNTOUCHED — they stay visible and keep lighting the
+// section in view at every width, which is the whole point of the device —
+// and only the seven <a class="out"> go away, each of which contains nothing
+// but its invisible .hit rect and its 6px .lab.
+//
+// visibility:hidden, NOT display:none, and not a rule on .hit: a
+// visibility:hidden subtree is out of the tab order and out of the
+// accessibility tree by definition, so this cannot leave seven 11px targets
+// tabbable behind an invisible rect — and it needs no JavaScript to hold.
+// (assets/js/redesign.js § 2c adds what CSS cannot: aria-hidden on the <svg>
+// and a viewBox cropped to the drawing. Both are cosmetic-or-better; the
+// pointer-target and tab-order fix is right here.)
+//
+// The list that takes over is dressed in the site's OWN outline vocabulary,
+// copied from .tocwrap .toc in _post.scss — Karla at --t-note, sentence case,
+// a hairline left rule that turns oxblood and thickens on hover. Sentence case
+// on purpose: the home page already carries 47 runs of uppercase Karla and
+// seven more would be seven more (see the .nwhen change). One column, full
+// bleed, min-height:44px: --t-note is 15.75px on a 20.8px line box, so the
+// 44px floor — not the 24px WCAG 2.5.8 minimum but the 44px AAA/Apple target —
+// is what sets the row, and the whole row width is the target.
 .mlplist{display:none}
 @media (max-width:639px){
-  .mlplist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--s3);list-style:none;margin:var(--s3) 0 0;padding:0}
-  .mlplist li{min-width:0}
-  .mlplist a{display:block;font-family:var(--sans);font-size:var(--t-note);line-height:1.32;color:var(--muted);text-decoration:none;padding:.34rem 0 .34rem var(--s2);border-left:1px solid var(--border)}
+  .mlp .out{visibility:hidden}
+  .mlplist{display:block;list-style:none;margin:var(--s3) 0 0;padding:0}
+  .mlplist a{display:flex;align-items:center;min-height:44px;font-family:var(--sans);font-size:var(--t-note);line-height:1.32;color:var(--muted);text-decoration:none;padding:var(--s1) 0 var(--s1) var(--s2);border-left:1px solid var(--border)}
   .mlplist a:hover,.mlplist a:focus-visible{color:var(--accent);border-left-color:var(--accent);border-left-width:2px;padding-left:calc(var(--s2) - 1px)}
 }
 

@@ -416,6 +416,54 @@
   sv.addEventListener("focusout",leave);
  }
 
+ /* 2c. BELOW 640px THE FIGURE IS DECORATION — "keep the drawing, list below
+    it". At that width the viewBox paints at ~0.485, so the seven section names
+    render at 5.98px and the rect that is their whole pointer target at
+    10.97px. _includes/redesign/mlp-hero.html therefore emits the same seven
+    sections a second time, from the same two Liquid arrays, as a real list of
+    44px-tall links, and _sass/redesign/_devices.scss hides the seven
+    <a class="out"> with visibility:hidden — which is what actually takes them
+    out of the tab order and the accessibility tree, with or without this
+    script.
+
+    Two things are left that CSS cannot say, and this says them:
+
+      aria-hidden   the <svg> still carries a <title> describing the network
+                    as the page's seven sections. With the list below now
+                    holding that job, the title would be a second, wordier
+                    table of contents read out first. Hidden on a phone,
+                    restored above 639px where the seven <a> are the real ones.
+
+      viewBox       the box reserves x = 372.6 … 596 for the names. With the
+                    names gone that is 34% of the width painted empty and the
+                    network shrunk to fit around nothing, so the box is cropped
+                    to 442 units — the last output disc at 368 + r 4.6, plus a
+                    unit of air — and the drawing fills the column it has.
+
+    Neither touches the field or the spy: both address .edge[data-l] and
+    .node[data-n], which stay visible and keep lighting at every width. A
+    reader with no JavaScript gets the cropped-viewBox benefit only after it
+    loads, and the uncropped figure before — a wider-than-needed drawing, never
+    a broken one. */
+ if(hero&&heroNet){
+  var VB_WIDE="-66 0 662 236",VB_PHONE="-66 0 442 236",
+      mqp=window.matchMedia?window.matchMedia("(max-width:639px)"):null;
+  var decor=function(){
+   var p=mqp?mqp.matches:false,i;
+   if(p)hero.setAttribute("aria-hidden","true");else hero.removeAttribute("aria-hidden");
+   hero.setAttribute("viewBox",p?VB_PHONE:VB_WIDE);
+   for(i=0;i<heroNet.outs.length;i++){
+    if(p)heroNet.outs[i].setAttribute("tabindex","-1");
+    else heroNet.outs[i].removeAttribute("tabindex");
+   }
+  };
+  decor();
+  if(mqp){
+   if(mqp.addEventListener)mqp.addEventListener("change",decor);
+   else if(mqp.addListener)mqp.addListener(decor);
+  }
+ }
+
  /* 3. ONE SCROLL-SPY drives all of it — the hero network, the mark in the
     bar, and the outline on the post. On home the targets are the seven
     section headings; elsewhere they are the entries that view marks with
