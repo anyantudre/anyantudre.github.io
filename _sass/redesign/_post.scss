@@ -10,8 +10,21 @@
 //    a parallel system: every measure resolves on --prose and --rail.
 
 // prose furniture
+// THE LADDER INSIDE A POST BODY. It was 72 / 54 / 27 — h2 only 1.33x the air
+// above an h3, while an h3 got 2x the air above a paragraph. The
+// discrimination was in the wrong place: the gap that says "new major
+// section" was barely louder than the one that says "new subsection". Compare
+// the home page, which gets it right — h2 takes --s12 (108px) against .entry's
+// --s4 (36px) and the trail's --s6 (54px), a clean 3:1 and 2:1.
+//
+// 72 / 36 / 27 now: h2 is 2x h3, and h3 is a clear step above a paragraph
+// break without pretending to be a section. No new token; s8, s4 and s3 are
+// all already in this file. It matters most on the longest pages, where a
+// reader scanning for structure is moving too fast to read the headings and
+// has only the air to go on. At <=959px .flow h2 drops to --s6 (54px), where
+// the two were IDENTICAL before this change and now read 54 / 36.
 .flow h2{margin-top:var(--s8)}
-.flow h3{margin:var(--s6) 0 var(--s2)}
+.flow h3{margin:var(--s4) 0 var(--s2)}
 .flow ul,.flow ol{padding-left:1.2em;margin:0 0 var(--s3);clear:right}
 .flow li{margin-bottom:var(--s1)}
 .flow li::marker{color:var(--faint)}
