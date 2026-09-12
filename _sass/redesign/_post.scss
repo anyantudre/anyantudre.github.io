@@ -179,12 +179,33 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
 @media (max-width:1119px){:root{--pad-left:2.5rem;--rail:13.5rem;--gap:2rem;--portrait:172px;--cell:1.4rem;--navw:27rem}
   .nav{column-gap:var(--s2)}
 }
-// --navh must never UNDER-state the stacked bar. Measured at 480–959px:
+// THE BAR STOPS STICKING HERE, and the measurement that used to size --navh
+// is the argument for it. Below 959px the masthead stacks to
 // 36 pad-top + 43 brand + 18 row-gap + 53 two-line nav + 18 + 16 rule + 9
-// + 9 pad-bottom + 1 border ≈ 203px. 10.5rem (189px) left the anchor jump
-// clearing the bar by 4px — inside the error bar of a font metric. 11.5rem
-// (207px) plus the --s2 in scroll-margin-top clears it by 22px.
-@media (max-width:959px){:root{--pad-left:1.5rem;--t-body:1.055rem;--setback:0rem;--field-h:auto;--navh:11.5rem}
+// + 9 pad-bottom + 1 border ≈ 203px. On a 375 × 667 phone that is 30.4% of
+// the screen given up permanently, on every page, for the whole scroll — and
+// a reading site that spends a third of a phone viewport on chrome has
+// stopped being a reading site.
+//
+// The bar earns its stickiness at desktop: 123px against an 800–1000px
+// viewport, about 13%, and the mini-MLP tracks the section in view as you
+// scroll. Stacked, none of that survives. The mini-MLP is 1.9rem of marks
+// too small to read, the spectrogram rule under it is pure ornament, and the
+// nav has already wrapped to two lines — so the reader pays 30% of the
+// viewport for a logo, a decorative band and five links they can reach by
+// scrolling to the top.
+//
+// --navh goes to zero with it. The token has exactly one reader left at this
+// width — [id]{scroll-margin-top:calc(var(--navh) + var(--s2))} — and with
+// nothing overlaying the page an anchor wants s2 and no more. (.tocwrap and
+// .postside are already static below 959px and 1300px respectively.)
+//
+// THE COST, stated plainly: the language switch, the theme toggle and the nav
+// now need a scroll to the top on a phone. The footer's seven waypoints are a
+// route back up on the home page but not on /cv/ or a post. That is a real
+// trade and the 200px is worth more.
+@media (max-width:959px){:root{--pad-left:1.5rem;--t-body:1.055rem;--setback:0rem;--field-h:auto;--navh:0rem}
+  .mast{position:static}
   .sheet{width:auto;margin:0;padding-left:var(--pad-left);padding-right:var(--pad-left)}
   // one column, one right edge — and a cap, or the measure runs past 100
   // characters between 700 and 959px where the rail has gone but the
@@ -242,7 +263,9 @@ blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-siz
   .hmcols span{font-size:.56rem}
   .hmrows{font-size:.56rem}
 }
-@media (max-width:479px){:root{--pad-left:1.25rem;--t-body:1rem;--cell:1.15rem;--navh:12rem}
+// --navh is not restated here: the bar is static from 959px down, so the
+// anchor offset stays at zero all the way to 375px.
+@media (max-width:479px){:root{--pad-left:1.25rem;--t-body:1rem;--cell:1.15rem}
   .mlp{max-width:100%}
   .minimlp{height:1.9rem}
 }
