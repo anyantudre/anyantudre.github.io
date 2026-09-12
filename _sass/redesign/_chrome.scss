@@ -97,7 +97,11 @@ button.tgl{background:none;border:0;padding:0;margin:0;font-family:inherit;color
 .contours .trail-l{fill:none;stroke:var(--accent);stroke-width:1.1;opacity:var(--trail-o);stroke-linejoin:round;stroke-linecap:round}
 .fmin{position:absolute;left:25%;top:71.33%;transform:translate(-100%,-50%);padding-right:1rem;max-width:16rem;text-align:right}
 .fmin::before{content:"";position:absolute;right:0;top:50%;transform:translate(50%,-50%);width:9px;height:9px;border-radius:50%;background:var(--accent)}
-.fmin a{font-family:var(--serif);font-size:1.1rem;font-style:italic;text-decoration:none;display:block;line-height:1.2}
+// 1.16rem to match .pname. This link and the portrait's .pname are the SAME
+// object — the site owner's name, serif italic — and they were rendered
+// 0.06rem apart, which is visible when you scroll from the top of the home
+// page to the bottom of it.
+.fmin a{font-family:var(--serif);font-size:1.16rem;font-style:italic;text-decoration:none;display:block;line-height:1.2}
 .fmin a:hover{color:var(--accent)}
 .fmin span{font-family:var(--sans);font-size:var(--t-label);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-top:2px}
 .fv{position:absolute;width:0;height:0;transform:translate(-50%,-50%);text-decoration:none}
@@ -112,7 +116,10 @@ button.tgl{background:none;border:0;padding:0;margin:0;font-family:inherit;color
 // tensor-shape citation DIRECTLY below it in the bracket form .attrib uses
 // everywhere else on the site — same face, size, colour and brackets.
 .flegend{margin:0 0 var(--s4)}
-.flegend .eq{display:block;text-align:right;font-family:var(--math);font-size:1.06rem;line-height:1.4;color:var(--text);margin:0}
+// 1.08rem, not 1.06: this and .colo-m in _post.scss are the same role — a
+// display-maths line set in --math — and shipped 0.02rem apart in two files,
+// a step no reader can perceive. One value for one role.
+.flegend .eq{display:block;text-align:right;font-family:var(--math);font-size:1.08rem;line-height:1.4;color:var(--text);margin:0}
 .flegend .attrib{text-align:right;margin:.15rem 0 0}
 // name at the left, social glyphs at the right
 .foot-band{padding-top:var(--s2);display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:var(--s2) var(--s4)}

@@ -18,7 +18,16 @@
 code{font-family:var(--mono);font-size:.82em;font-style:normal}
 // .8rem = 14.4px, a step under --t-note: the listing's longest line
 // (61 characters) then clears the 36rem measure without scrolling
-pre{font-family:var(--mono);font-size:.8rem;line-height:1.62;background:var(--surface);border:1px solid var(--border);padding:var(--s3);overflow-x:auto;tab-size:4;-moz-tab-size:4;margin:0 0 var(--s4);clear:right}
+// border-radius:2px — the site runs ONE radius system and this was one of the
+// two framed boxes outside it. The portrait, the blog index thumb, the project
+// lead image, the legacy figure images and teasers, the legacy buttons and the
+// .copy control are all 2px on a 1px --border hairline; the listing and the
+// legacy iframe were square. On a page with exactly one radius value a second
+// value reads as an oversight, not as variety — and the 2px-cornered copy
+// button sat INSIDE the square box, which is the version of the error you can
+// see without measuring anything, on every post and every project page that
+// carries a listing.
+pre{font-family:var(--mono);font-size:.8rem;line-height:1.62;background:var(--surface);border:1px solid var(--border);border-radius:2px;padding:var(--s3);overflow-x:auto;tab-size:4;-moz-tab-size:4;margin:0 0 var(--s4);clear:right}
 pre code{font-size:1em}
 blockquote{margin:var(--s4) 0;padding-left:var(--s3);border-left:2px solid var(--accent);font-style:italic;line-height:1.5;clear:right}
 blockquote cite{display:block;font-style:normal;font-family:var(--sans);font-size:var(--t-label);text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-top:var(--s1)}

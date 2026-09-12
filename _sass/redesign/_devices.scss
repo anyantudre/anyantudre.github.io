@@ -57,7 +57,9 @@
 .a1{--al:.07} .a2{--al:.13} .a3{--al:.21} .a4{--al:.31}
 .a5{--al:.43} .a6{--al:.57} .a7{--al:.73} .a8{--al:.92}
 // WEAK — strip — STRONG. The words flank the ramp; nothing floats above it.
-.hmkey{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;font-family:var(--sans);font-size:var(--t-label);font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--muted);margin:var(--s3) 0 0;line-height:1.7}
+// .11em was the one member of the uppercase-label family off the .1em the
+// other twelve share, for no reason in the file or the design notes.
+.hmkey{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;font-family:var(--sans);font-size:var(--t-label);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:var(--s3) 0 0;line-height:1.7}
 .hmkey .ramp{display:flex;border:1px solid var(--border)}
 .hmkey .sw{display:block;width:1.15rem;height:.72rem;background-color:var(--bg);background-image:#{"linear-gradient(rgba(var(--acc-rgb),var(--al,0)),rgba(var(--acc-rgb),var(--al,0)))"}}
 

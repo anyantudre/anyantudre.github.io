@@ -42,6 +42,21 @@ html[data-view="talks"] [data-page="talks"] { display: block; }
 
 // === 5. TYPOGRAPHY ===
 h1,h2,h3{font-weight:400;font-style:italic;line-height:1.15;text-wrap:balance}
+// ORPHAN CONTROL WAS KEYED TO ELEMENTS, so every title the design sets in a
+// <span> fell straight through it. The five text-wrap rules in the compiled
+// stylesheet are h1/h2/h3, p/li, .posthead h1 and .dek — and none of them
+// reaches .nwhat, which is the loudest text in a News row: --t-h3 italic serif
+// in a 1fr grid cell beside an 8.5rem date column, directly under the hero on
+// the home page. A --t-h3 title in a narrow track is the exact case balance
+// exists for; at that measure a three-word overflow onto line two is common
+// and a one-word orphan is the default outcome. .wtitle, .list .t, .certs .t
+// and .ps-t are in the same position at smaller sizes.
+//
+// One declaration, and the selector is written by CLASS so the next title span
+// is added here rather than rediscovering the bug. balance degrades to normal
+// where it is unsupported and the spec caps it at a few lines, so it costs
+// nothing on strings this short.
+.nwhat,.wtitle,.list .t,.certs .t,.ps-t{text-wrap:balance}
 .dsp{font-family:var(--serif);font-style:italic;font-weight:400;font-size:var(--t-dsp);line-height:1.02;letter-spacing:-.02em;margin:0 0 var(--s2)}
 h1{font-size:var(--t-h1);letter-spacing:-.018em;margin-bottom:var(--s3)}
 // no border-bottom: the spectrogram band IS the rule and sits UNDER the
